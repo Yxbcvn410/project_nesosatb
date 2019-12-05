@@ -10,7 +10,7 @@ pygame.event.set_blocked([pygame.MOUSEMOTION, pygame.KEYUP])
 canvas = pygame.display.set_mode([800, 600])
 clock = pygame.time.Clock()
 level = Level(4, 120, None)
-level.add_mini_game(StubMinigame(0, 16))
+level.add_mini_game(StubMinigame(0, 16, canvas ))
 graphical_ui = GameUI(canvas)
 runtime = LevelRuntime(graphical_ui)
 runtime.load(level)
@@ -19,7 +19,6 @@ runtime.play()
 while True:
     clock.tick(FPS)
     for event in pygame.event.get():
-        # FIXME События появляются в очереди с задержкой. @drop_name, что pygame может по этому поводу предложить?
         if event.type == pygame.KEYDOWN:
             runtime.key_pressed(event.key)
         elif event.type == pygame.MOUSEBUTTONDOWN:
