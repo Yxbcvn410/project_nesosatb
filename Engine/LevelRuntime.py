@@ -1,6 +1,6 @@
 from Engine import Level
 
-FPS = 30
+FPS = 60
 
 
 class MusicPlayer:
@@ -35,7 +35,7 @@ class LevelRuntime:
         return {
             'bars': beat_no // self.level.beat_size,
             'beats': beat_no % self.level.beat_size,
-            'delta': beat_delta,
+            'delta': beat_delta * self.level.bpm / 60,
             'beat_type': 0 if abs(beat_delta) > (0.5 / FPS) else 1 if beat_no % self.level.beat_size else 2
         }
 
