@@ -56,17 +56,22 @@ class MiniGameWrapper(AbstractMiniGame):
 
     def update(self, time: dict):
         """Обновить текущую мини-игру"""
+        current_mini_game_stats = {'delta_health': 0, 'delta_score': 0}
+        if self.active_mini_game is None:
+            # Уровень закончился, мини-игр больше нет
+            return current_mini_game_stats
+
         if self.active_mini_game.is_over(time):
             # Текущая мини-игра закончилась, ищем следующую
             self.active_mini_game = self.__get_nearest_future_mini_game(time)
+            if self.active_mini_game is None:
+                return current_mini_game_stats
 
-        if self.active_mini_game:
-            # Если есть мини-игра в будущем, обновляем и рисуем
-            minigame_time = dict(time)
-            minigame_time['bars'] -= self.active_mini_game.start_time
-            return self.active_mini_game.update(minigame_time)
-        # Уровень закончился, мини-игр больше нет
-        return {'delta_health': 0, 'delta_score': 0}
+        # Если есть мини-игра в будущем, обновляем
+        minigame_time = dict(time)
+        minigame_time['bars'] -= self.active_mini_game.start_time
+        current_mini_game_stats = self.active_mini_game.update(minigame_time)
+        return current_mini_game_stats
 
     def handle(self, event):
         """Передать мини-игре событие нажатия"""
@@ -78,7 +83,4 @@ class MiniGameWrapper(AbstractMiniGame):
 
     def draw(self, time: dict, graphical_ui):
         if self.active_mini_game:
-            if self.active_mini_game.start_time > time['bars']:
-                graphical_ui.clean_canvas()
-            else:
-                self.active_mini_game.draw(time, graphical_ui)
+            self.active_mini_game.draw(time, graphical_ui)

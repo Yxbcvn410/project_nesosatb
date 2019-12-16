@@ -17,10 +17,32 @@ class AbstractUI(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def update(self):
+        """Обновляется, обновляет рантайм если есть. Вызывается синхронно с FPS."""
+        pass
+
+    @abc.abstractmethod
     def draw_widgets(self):
-        """Рисует на экране виджеты. Вызывается синхронно с FPS"""
+        """Рисует на экране виджеты."""
         pass
 
     def clean_canvas(self):
         """Очищает холст"""
         self.canvas.fill((0, 0, 0))
+
+
+class AnimationRuntime:
+    def __init__(self):
+        self.animations = []
+
+    def add_animation(self, sprite, time, final_state: dict):
+        pass  # TODO
+
+    def update_all(self):
+        pass  # TODO
+
+    def delete_animation(self, sprite):
+        pass  # TODO
+
+    def is_animating(self) -> bool:
+        return not bool(self.animations)

@@ -8,9 +8,11 @@ from Engine.Media import Sprite
 
 pygame.init()
 
-canvas = pygame.display.set_mode([800, 600])
+canvas = pygame.display.set_mode([1080, 720])
 img = pygame.image.load('Assets/Artwork/exp_1.png')
+img = pygame.transform.rotozoom(img, 0, 10)
 img2 = pygame.image.load('Assets/Artwork/m_r1.png')
+img2 = pygame.transform.rotozoom(img2, 0, 10)
 
 clock = pygame.time.Clock()
 runtime = LevelRuntime()
@@ -35,5 +37,6 @@ while True:
                 pass  # TODO change GUI
         elif event.type == pygame.QUIT:
             exit(0)
-    runtime.update()
+    graphical_ui.update()
     graphical_ui.draw_widgets()
+    pygame.display.update()

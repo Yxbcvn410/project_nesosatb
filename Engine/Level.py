@@ -2,7 +2,7 @@ import pygame
 
 from Engine.Media import MusicPlayer
 
-FPS = 60
+FPS = 30
 
 
 class Level:
@@ -15,25 +15,22 @@ class Level:
         self.health_max = health_max
         self.health = health_max
         self.score = 0
+        self.progress = 0.
 
     def load(self, wrapper):
         self.game = wrapper
 
     def update(self, time: dict):
-        """Обновить текущую мини-игру и графическое представление"""
+        """Обновить текущую мини-игру и графическое представление
+        Возврат True если игра закончена, иначе False"""
+        self.progress = time['bars'] / self.game.life_time
         game_states_change = self.game.update(time)
-        self.graphical_ui.set_info({
-            'current_score': self.score,
-            'global_score': self.score,
-            'health_info': {'health': self.health, 'max': self.health_max},
-            'progress': time['bars'] / self.game.life_time
-        })
         self.health -= game_states_change['delta_health']
         self.score += game_states_change['delta_score']
-        self.graphical_ui.clean_canvas()
-        self.game.draw(time, self.graphical_ui)
-        pygame.display.update()
         return not self.game.is_over(time) and (self.health > 0)
+
+    def draw(self, time: dict):
+        self.game.draw(time, self.graphical_ui)
 
     def handle_event(self, event):
         """Передать мини-игре событие нажатия"""
@@ -41,6 +38,14 @@ class Level:
         self.health -= game_states_change['delta_health']
         self.score += game_states_change['delta_score']
         # То, как событие отобразится на графическом представлении, определяет мини-игра
+
+    def get_stats(self):
+        return {
+            'current_score': self.score,
+            'global_score': self.score,
+            'health_info': {'health': self.health, 'max': self.health_max},
+            'progress': self.progress
+        }
 
 
 class LevelRuntime:
@@ -70,14 +75,12 @@ class LevelRuntime:
 
     def update(self):
         """Обновить уровень. Возвращает True если выполняется, иначе False"""
+        level_over = False
         if not self.paused:
             self.time += 1 / FPS
-            if not self.level.update(self.get_time_dict()):
-                self.level = None
-                self.pause()
-                return False
-            return True
-        return not bool(self.level)
+            level_over = self.level.update(self.get_time_dict())
+        self.level.draw(self.get_time_dict())
+        return {'pause': self.paused, 'over': level_over, 'stats': self.level.get_stats()}
 
     def key_pressed(self, key):
         """Обработать нажатие клавиши"""
