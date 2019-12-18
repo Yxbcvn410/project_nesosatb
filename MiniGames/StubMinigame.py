@@ -1,5 +1,4 @@
 import pygame
-
 from Engine.Media import Sprite
 from Engine.MiniGame import *
 
@@ -11,7 +10,7 @@ class StubMinigame(AbstractMiniGame):
         sprite.transform(center=(400, 300))
         self.color = None
         self.base_color = base_color
-        self.ss = pygame.mixer.Sound('/home/fetisu/Downloads/E-Mu-Proteus-2-Glockenspiel-C4.wav')
+        self.bp = pygame.mixer.Sound('Assets/Sound/wrong.wav')
 
     def update(self, time: dict):
         self.color = (255 - 2 * abs(time['delta']) * (255 - self.base_color[0]),
@@ -22,9 +21,9 @@ class StubMinigame(AbstractMiniGame):
         return {'delta_health': 0, 'delta_score': 0}
 
     def draw(self, time: dict, graphical_ui):
+        if time['beat_type'] in (1, 2):
+            self.bp.play()
         self.spr.draw(graphical_ui.canvas)
-        if time['bars'] == 2:
-            self.ss.play()
 
     def handle(self, event):
         print(str(event) + '\n')
