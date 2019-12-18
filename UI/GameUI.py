@@ -22,6 +22,7 @@ class GameUI(AbstractUI):
             self.runtime.pause()
 
     def draw_widgets(self):
+        self.runtime.draw()
         if self.runtime.paused:
             font = pygame.font.Font('Assets/Fonts/Patapon.ttf', 20)
             pause_text = font.render('Pause', 1, (255, 255, 255))

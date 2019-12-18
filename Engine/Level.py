@@ -6,7 +6,7 @@ FPS = 30
 
 
 class Level:
-    def __init__(self, beat_size, bpm, music, graphical_ui, health_max=1000):
+    def __init__(self, beat_size, bpm, music, graphical_ui, health_max=1000, metadata=None):
         self.beat_size = beat_size
         self.bpm = bpm
         self.music = music
@@ -16,6 +16,7 @@ class Level:
         self.health = health_max
         self.score = 0
         self.progress = 0.
+        self.metadata = metadata
 
     def load(self, wrapper):
         self.game = wrapper
@@ -79,13 +80,15 @@ class LevelRuntime:
         if not self.paused:
             self.time += 1 / FPS
             level_over = self.level.update(self.get_time_dict())
-        self.level.draw(self.get_time_dict())
         return {'pause': self.paused, 'over': level_over, 'stats': self.level.get_stats()}
 
     def key_pressed(self, key):
         """Обработать нажатие клавиши"""
         if not self.paused:
             self.level.handle_event({'key': key, 'time': self.get_time_dict()})
+
+    def draw(self):
+        self.level.draw(self.get_time_dict())
 
     def pause(self):
         """Поставить уровень на паузу"""

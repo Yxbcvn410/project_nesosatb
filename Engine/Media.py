@@ -23,12 +23,12 @@ class Sprite:
             self.image = image
         else:
             raise TypeError  # Image type not supported
-        self.image = self.image.convert()
 
         self.center = (0, 0)
         self.turn = 0
         self.scale = 1
         self.opacity = 1
+        self.temp = None
 
     def transform(self, **kwargs):
         if 'center' in kwargs:
@@ -49,8 +49,14 @@ class Sprite:
     def set_opacity(self, opacity):
         self.opacity = opacity
 
+    def __blit_alpha__(self, target, source, location, opacity):
+        self.temp = pygame.Surface((source.get_width(), source.get_height())).convert()
+        self.temp.blit(target, tuple(-x for x in location))
+        self.temp.blit(source, (0, 0))
+        self.temp.set_alpha(opacity * 255)
+        target.blit(self.temp, location)
+
     def draw(self, surface):
         transformed_instance = pygame.transform.rotozoom(self.image, self.turn, self.scale)
-        transformed_instance.set_alpha(int(self.opacity * 255))
         left_upper_angle = tuple(pt[0] - pt[1] * 0.5 for pt in zip(self.center, transformed_instance.get_size()))
-        surface.blit(transformed_instance, left_upper_angle)
+        self.__blit_alpha__(surface, transformed_instance, left_upper_angle, self.opacity)
