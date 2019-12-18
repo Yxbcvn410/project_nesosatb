@@ -3,6 +3,7 @@ import pygame
 from Engine.Level import LevelRuntime, FPS, Level
 from UI.GameUI import GameUI
 from MiniGames.StubMinigame import StubMinigame
+from MiniGames.VetaMinigame import VetaMinigame
 from Engine.MiniGame import MiniGameWrapper
 from Engine.Media import Sprite
 
@@ -19,9 +20,11 @@ runtime = LevelRuntime()
 graphical_ui = GameUI(canvas, runtime)
 
 game = MiniGameWrapper()
-for i in range(8):
-    game.append_mini_game(StubMinigame(1, Sprite(img)))
-    game.append_mini_game(StubMinigame(1, Sprite(img2)))
+
+# game.append_mini_game(StubMinigame(16, Sprite(img2)))
+
+game.append_mini_game(VetaMinigame(50))
+
 
 level = Level(4, 120, None, graphical_ui)
 level.load(game)

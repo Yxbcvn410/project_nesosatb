@@ -11,6 +11,7 @@ class StubMinigame(AbstractMiniGame):
         sprite.transform(center=(400, 300))
         self.color = None
         self.base_color = base_color
+        self.ss = pygame.mixer.Sound('/home/fetisu/Downloads/E-Mu-Proteus-2-Glockenspiel-C4.wav')
 
     def update(self, time: dict):
         self.color = (255 - 2 * abs(time['delta']) * (255 - self.base_color[0]),
@@ -22,7 +23,8 @@ class StubMinigame(AbstractMiniGame):
 
     def draw(self, time: dict, graphical_ui):
         self.spr.draw(graphical_ui.canvas)
-        print(self.spr.scale)
+        if time['bars'] == 2:
+            self.ss.play()
 
     def handle(self, event):
         print(str(event) + '\n')
