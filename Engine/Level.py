@@ -1,62 +1,105 @@
+import pygame
+
+from Engine.Media import MusicPlayer
+
+FPS = 30
+
+
 class Level:
-    def __init__(self, beat_size, bpm, music):
+    def __init__(self, beat_size, bpm, music, graphical_ui, health_max=1000):
         self.beat_size = beat_size
         self.bpm = bpm
         self.music = music
-        self.__mini_games = []
-        self.overall_time = 0
+        self.graphical_ui = graphical_ui
+        self.game = None
+        self.health_max = health_max
+        self.health = health_max
         self.score = 0
-        self.health_max = 1000
-        self.health = self.health_max
-        self.active_mini_game = None
+        self.progress = 0.
 
-    def add_mini_game(self, mini_game):
-        """Добавляем мини-игру. По-другому добавлять мини-игры нельзя!"""
-        self.__mini_games.append(mini_game)
-        self.active_mini_game = self.__get_nearest_future_mini_game({'bars': 0})
-        self.overall_time = max(self.overall_time, mini_game.start_time + mini_game.life_time)
+    def load(self, wrapper):
+        self.game = wrapper
 
-    def __get_nearest_future_mini_game(self, time: dict):
-        """Ищем ближайшую мини-игру в будущем"""
-        nearest_mini_game = None
-        for mini_game in self.__mini_games:
-            if (mini_game.start_time >= time['bars']) and (
-                    (nearest_mini_game is None) or (nearest_mini_game.start_time > mini_game.start_time)):
-                nearest_mini_game = mini_game
-        return nearest_mini_game
+    def update(self, time: dict):
+        """Обновить текущую мини-игру и графическое представление
+        Возврат True если игра закончена, иначе False"""
+        self.progress = time['bars'] / self.game.life_time
+        game_states_change = self.game.update(time)
+        self.health -= game_states_change['delta_health']
+        self.score += game_states_change['delta_score']
+        return not self.game.is_over(time) and (self.health > 0)
 
-    def update(self, time: dict, graphical_ui):
-        """Обновить текущую мини-игру и графическое представление"""
-        if self.active_mini_game.is_over(time):
-            # Текущая мини-игра закончилась, ищем следующую
-            self.score += self.active_mini_game.score
-            self.health -= self.active_mini_game.health_lost
-            self.active_mini_game = self.__get_nearest_future_mini_game(time)
-
-        if self.active_mini_game:
-            # Если есть мини-игра в будущем, обновляем и рисуем
-            minigame_time = dict(time)
-            minigame_time['bars'] -= self.active_mini_game.start_time
-            self.active_mini_game.update(minigame_time)
-            self.active_mini_game.draw(minigame_time, graphical_ui)
-            graphical_ui.draw_info({
-                'current_score': self.active_mini_game.score,
-                'global_score': self.score,
-                'health_info': {'health': self.health, 'max': self.health_max},
-                'progress': time['bars'] / self.overall_time
-            })
-            if self.health - self.active_mini_game.health_lost < 0:
-                # Здоровье кончилось
-                graphical_ui.draw_game_over({'score': self.score, 'health': self.health})
-                self.active_mini_game = None
-        else:
-            # Уровень закончился, мини-игр больше нет
-            graphical_ui.draw_game_over({'score': self.score, 'health': self.health})
-        return {'over': self.active_mini_game is None, 'score': self.score}
+    def draw(self, time: dict):
+        self.game.draw(time, self.graphical_ui)
 
     def handle_event(self, event):
         """Передать мини-игре событие нажатия"""
-        if self.active_mini_game:
-            event['time']['bars'] -= self.active_mini_game.start_time
-            self.active_mini_game.handle(event)
+        game_states_change = self.game.handle(event)
+        self.health -= game_states_change['delta_health']
+        self.score += game_states_change['delta_score']
         # То, как событие отобразится на графическом представлении, определяет мини-игра
+
+    def get_stats(self):
+        return {
+            'current_score': self.score,
+            'global_score': self.score,
+            'health_info': {'health': self.health, 'max': self.health_max},
+            'progress': self.progress
+        }
+
+
+class LevelRuntime:
+    def __init__(self):
+        self.level = None
+        self.time = 0.
+        self.paused = True
+        self.music = MusicPlayer()
+
+    def get_time_dict(self):
+        """Получить расширенную информацию о текущем времени"""
+        beat_no = int(self.time * self.level.bpm / 60)
+        beat_delta = self.time - beat_no * (60 / self.level.bpm)
+        if beat_delta > 30 / self.level.bpm:
+            beat_delta = beat_delta - 60 / self.level.bpm
+            beat_no += 1
+        return {
+            'bars': beat_no // self.level.beat_size,
+            'beats': beat_no % self.level.beat_size,
+            'delta': beat_delta * self.level.bpm / 60,
+            'beat_type':
+                -1 if beat_delta - (30 / self.level.bpm) > - 1 / FPS
+                else 0 if abs(beat_delta) > (0.5 / FPS)
+                else 1 if beat_no % self.level.beat_size
+                else 2
+        }
+
+    def update(self):
+        """Обновить уровень. Возвращает True если выполняется, иначе False"""
+        level_over = False
+        if not self.paused:
+            self.time += 1 / FPS
+            level_over = self.level.update(self.get_time_dict())
+        self.level.draw(self.get_time_dict())
+        return {'pause': self.paused, 'over': level_over, 'stats': self.level.get_stats()}
+
+    def key_pressed(self, key):
+        """Обработать нажатие клавиши"""
+        if not self.paused:
+            self.level.handle_event({'key': key, 'time': self.get_time_dict()})
+
+    def pause(self):
+        """Поставить уровень на паузу"""
+        self.music.pause()
+        self.paused = True
+
+    def play(self):
+        """Запустить уровень (После загрузки или паузы)"""
+        if self.level is None:
+            raise AssertionError  # Уровень не загружен!
+        self.music.play()
+        self.paused = False
+
+    def load(self, level: Level):
+        """Загрузить уровень"""
+        self.level = level
+        self.music.load(self.level.music)
