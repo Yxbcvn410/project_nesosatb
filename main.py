@@ -4,6 +4,7 @@ from Engine.LevelRuntime import LevelRuntime, FPS
 from Engine.Level import Level
 from Engine.GameUI import GameUI
 from StubMinigame import StubMinigame
+from minigame import StubMinigame
 
 pygame.init()
 pygame.event.set_blocked([pygame.MOUSEMOTION, pygame.KEYUP])
