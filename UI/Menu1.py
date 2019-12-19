@@ -8,7 +8,6 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
     def __init__(self, canvas):
         super().__init__(canvas)
         # добавление фонарика
-        self.a = 1
         self.player = pygame.sprite.Sprite()
         self.source_light = pygame.image.load("Assets/Artwork/flashlight_orange.png").convert_alpha(self.canvas)
         self.source_light = pygame.transform.scale(self.source_light,
@@ -24,18 +23,14 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.light_on = True
         self.ray = pygame.sprite.Sprite()
 
-
         self.ray.image = pygame.Surface((self.canvas.get_width(), self.canvas.get_height()), pygame.SRCALPHA)
         pygame.gfxdraw.filled_circle(self.ray.image,
                                      self.canvas.get_width()//2, self.canvas.get_height()//4,
                                      self.player.image.get_width()//2, (240, 184, 0))
-        pygame.gfxdraw.filled_circle(self.ray.image,
-                                    self.canvas.get_width() // 2, self.canvas.get_height() // 4,
+        pygame.gfxdraw.filled_circle(self.ray.image, self.canvas.get_width() // 2, self.canvas.get_height() // 4,
                                      int(0.74*self.player.image.get_height()), (255, 248, 176))
         self.ray.rect = self.ray.image.get_rect()
         self.player_group.add(self.ray)
-
-
 
         # пустое место
         self.nothing = pygame.sprite.Sprite()
@@ -50,21 +45,23 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
 
     def key_press(self, event):
         if event.key == pygame.K_h or event.key == pygame.K_LEFT or event.key == pygame.K_a:
-            self.turning = -1
+            self.turning -= 1
 
-        elif event.key == pygame.K_h or event.key == pygame.K_LEFT or event.key == pygame.K_a:
-            self.turning = +1
-        pass
+        elif event.key == pygame.K_l or event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+            self.turning += 1
+
 
     def update(self):
+        if self.turning == 0:
+            self.player.image = self.source_light
+            self.ray.rect.center = (self.canvas.get_width()//2, self.canvas.get_height()//2)
+        elif self.turning == 1:
+            self.player.image = pygame.transform.rotate(self.source_light, 25)
+            self.ray.rect.center = (int(0.25 * self.canvas.get_width()), self.ray.image.get_height()//2)
+        elif self.turning == -1:
+            self.player.image = pygame.transform.rotate(self.source_light, -25)
+            self.ray.rect.center = (int(0.75 * self.canvas.get_width()), self.ray.image.get_height()//2)
 
-            if self.turning <40 and self.turning > -40:
-                for sprt in self.player_group.sprites():
-                    sprt.image = pygame.transform.rotate(sprt.image, self.a)
-                self.player_group.update()
-                self.turning += self.a
-            else:
-                self.a = -self.a
     def draw_widgets(self):
         self.clean_canvas()
         self.player_group.draw(self.canvas)
