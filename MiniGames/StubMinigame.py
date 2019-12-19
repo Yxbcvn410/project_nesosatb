@@ -21,10 +21,10 @@ class StubMinigame(AbstractMiniGame):
         self.spr.transform(scale=1 + (0.5 - abs(time['delta'])) ** 2.1 * (0.5 if time['beats'] == 0 else 0.2))
         return {'delta_health': 0, 'delta_score': 0}
 
-    def draw(self, time: dict, graphical_ui):
+    def draw(self, time: dict, canvas):
         if time['beat_type'] in (1, 2):
             self.bp.play()
-        self.spr.draw(graphical_ui.canvas)
+        self.spr.draw(canvas)
 
     def handle(self, event):
         print(str(event) + '\n')

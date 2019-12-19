@@ -6,11 +6,10 @@ FPS = 30
 
 
 class Level:
-    def __init__(self, beat_size, bpm, music, graphical_ui, health_max=1000, metadata=None):
+    def __init__(self, beat_size, bpm, music, health_max=1000, metadata=None):
         self.beat_size = beat_size
         self.bpm = bpm
         self.music = music
-        self.graphical_ui = graphical_ui
         self.game = None
         self.health_max = health_max
         self.health = health_max
@@ -31,8 +30,8 @@ class Level:
         print(self.progress)
         return self.game.is_over(time) or self.health < 0
 
-    def draw(self, time: dict):
-        self.game.draw(time, self.graphical_ui)
+    def draw(self, canvas, time: dict):
+        self.game.draw(time, canvas)
 
     def handle_event(self, event):
         """Передать мини-игре событие нажатия"""
@@ -48,6 +47,12 @@ class Level:
             'health_info': {'health': self.health, 'max': self.health_max},
             'progress': self.progress
         }
+
+    def reset(self):
+        self.score = 0
+        self.progress = 0.
+        self.health = self.health_max
+        self.game.reset()
 
 
 class LevelRuntime:
@@ -89,8 +94,8 @@ class LevelRuntime:
         if not self.paused:
             self.level.handle_event({'key': key, 'time': self.get_time_dict()})
 
-    def draw(self):
-        self.level.draw(self.get_time_dict())
+    def draw(self, canvas):
+        self.level.draw(canvas, self.get_time_dict())
 
     def pause(self):
         """Поставить уровень на паузу"""

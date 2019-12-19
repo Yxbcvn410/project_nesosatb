@@ -25,7 +25,7 @@ class AbstractMiniGame(abc.ABC):
         return {'delta_health': 0, 'delta_score': 0}
 
     @abc.abstractmethod
-    def draw(self, time: dict, graphical_ui):
+    def draw(self, time: dict, canvas):
         """Отрисовать компоненты мини-игры"""
         pass
 
@@ -86,6 +86,10 @@ class MiniGameWrapper(AbstractMiniGame):
         return {'delta_health': 0, 'delta_score': 0}
         # То, как событие отобразится на графическом представлении, определяет мини-игра
 
-    def draw(self, time: dict, graphical_ui):
+    def draw(self, time: dict, canvas):
         if self.active_mini_game:
-            self.active_mini_game.draw(time, graphical_ui)
+            self.active_mini_game.draw(time, canvas)
+
+    def reset(self):
+        self.active_mini_game = self.__get_nearest_future_mini_game({'bars': 0})
+        self.event_queue = []

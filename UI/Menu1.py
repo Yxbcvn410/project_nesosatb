@@ -6,6 +6,7 @@ from Engine.Level import LevelRuntime, Level
 from MiniGames.StubMinigame import StubMinigame
 from Engine.MiniGame import MiniGameWrapper
 from Engine.Media import Sprite
+import copy
 
 # colors
 LEMON = (255, 248, 176)
@@ -13,10 +14,6 @@ ORANGE = (240, 184, 0)
 
 
 class Menu(AbstractUI, pygame.sprite.Sprite):
-
-    def load_views(self, views: dict):
-        pass
-
     def __init__(self, canvas):
         super().__init__(canvas)
         # добавление фонарика
@@ -60,9 +57,10 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.icon_group.add(*self.game_list)
 
         # уровни
-        level = Level(4, 120, None, self)
+        level = Level(4, 120, None)
         game = MiniGameWrapper()
-        game.append_mini_game(StubMinigame(4, Sprite(pygame.image.load('Assets/Artwork/exp_1.png'))))
+        game.append_mini_game(
+            StubMinigame(4, Sprite(pygame.transform.rotozoom(pygame.image.load('Assets/Artwork/exp_1.png'), 0, 10))))
         level.load(game)
         self.levels = [level] * 3
 
@@ -79,6 +77,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
 
         if event.key == pygame.K_SPACE:
             runtime = LevelRuntime()
+            self.levels[self.turning].reset()
             runtime.load(self.levels[self.turning])
             return GameUI(self.canvas), runtime
 
@@ -105,4 +104,4 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         new_icon = pygame.image.load(level.metadata['icon']).convert_alpha(self.canvas)
         self.game_list[self.n_icons].image = new_icon
         self.game_list[self.n_icons].rect = new_icon.get_rect()
-        self.levels.append(level)
+        self.games.append(level.game)
