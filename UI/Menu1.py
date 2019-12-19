@@ -7,8 +7,15 @@ from MiniGames.StubMinigame import StubMinigame
 from Engine.MiniGame import MiniGameWrapper
 from Engine.Media import Sprite
 
+# colors
+LEMON = (255, 248, 176)
+ORANGE = (240, 184, 0)
+
 
 class Menu(AbstractUI, pygame.sprite.Sprite):
+
+    def load_views(self, views: dict):
+        pass
 
     def __init__(self, canvas):
         super().__init__(canvas)
@@ -32,9 +39,9 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.ray.image = pygame.Surface((self.canvas.get_width(), self.canvas.get_height()), pygame.SRCALPHA)
         pygame.gfxdraw.filled_circle(self.ray.image,
                                      self.canvas.get_width() // 2, self.canvas.get_height() // 4,
-                                     self.player.image.get_width() // 2, (240, 184, 0))
+                                     self.player.image.get_width() // 2, ORANGE)
         pygame.gfxdraw.filled_circle(self.ray.image, self.canvas.get_width() // 2, self.canvas.get_height() // 4,
-                                     int(0.74 * self.player.image.get_height()), (255, 248, 176))
+                                     int(0.74 * self.player.image.get_height()), LEMON)
         self.ray.rect = self.ray.image.get_rect()
         self.player_group.add(self.ray)
 
@@ -47,7 +54,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
                                      self.canvas.get_width() // 2, self.canvas.get_height() // 4, 0, (0, 0, 0))
         self.nothing.rect = self.nothing.image.get_rect()
         self.nothing.rect.center = (self.canvas.get_width() // 2, self.canvas.get_height() // 4)
-        self.game_list = [self.nothing]*3
+        self.game_list = [self.nothing] * 3
         self.n_icons = 0
         self.icon_group = pygame.sprite.Group()
         self.icon_group.add(*self.game_list)
@@ -57,9 +64,11 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         game = MiniGameWrapper()
         game.append_mini_game(StubMinigame(4, Sprite(pygame.image.load('Assets/Artwork/exp_1.png'))))
         level.load(game)
-        self.levels = [level]*3
+        self.levels = [level] * 3
 
     def key_press(self, event):
+        if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+            exit(0)
         if event.key == pygame.K_h or event.key == pygame.K_LEFT or event.key == pygame.K_a:
             self.turning += 1
             self.turning = self.turning % 3
