@@ -60,30 +60,40 @@ class HoleForVetaMiniGame:
 class VetaMiniGame(AbstractMiniGame):
     def __init__(self, life_time):
         super().__init__(life_time)
+        self.width, self.height = 1080, 720
         img_dir = path.join(path.dirname(__file__), '../Assets/Artwork/img')
         background = pygame.image.load(path.join(img_dir, 'background01.png')).convert()
         background = pygame.transform.rotozoom(background, 0, 1.4)
         self.backgrounds = [Sprite(background), Sprite(background)]
         self.dx = 0
         self.bk_length = self.backgrounds[0].image.get_size()[0]
-        bird = pygame.image.load(path.join(img_dir, 'rose_bird_1.png')).convert_alpha()
-        bird = pygame.transform.rotozoom(bird, 0, 0.2)
-        self.bird = Sprite(bird)
+        bird_up = pygame.image.load(path.join(img_dir, 'rose_up.png')).convert_alpha()
+        bird_up = pygame.transform.rotozoom(bird_up, 0, 0.2)
+        bird_down = pygame.image.load(path.join(img_dir, 'rose_down.png')).convert_alpha()
+        bird_down = pygame.transform.rotozoom(bird_down, 0, 0.2)
+        self.bird = [Sprite(bird_up), Sprite(bird_down)]
+        self.up_or_down_bird = 0
         self.bird_y = 100
         self.time = 0
         self.hole = HoleForVetaMiniGame(rnd(30, 80), 720, rnd(0, 1))
         self.hole_dx = 0
-        self.width, self.height = 1080, 720
 
     def update(self, time: dict):
         # kinda of gravitation for bird
         self.bird_y += 1
 
+        # changing birds wings every bit
+        if time['beat_type'] in (1, 2):
+            self.up_or_down_bird += 1
+            self.up_or_down_bird %= 2
+
+        # calculating x for background and bird pictures
         self.time = math.fabs(4 * time['bars'] + time['beats'] + time['delta'])
         self.dx = 150 * self.time
         if self.dx >= self.bk_length:
             self.dx %= self.bk_length
 
+        # hole managing
         if self.hole.should_be_destroyed:
             self.hole = HoleForVetaMiniGame(rnd(30, 80), self.height, rnd(0, 1))
             self.hole_dx = 0
@@ -92,16 +102,16 @@ class VetaMiniGame(AbstractMiniGame):
 
         delta_health = 0
         # checking whether inside a Gaussian distribution
-        # if self.hole:
-        #     hole_under_bird_x = self.width - self.hole_dx + 3 * self.hole.sigma
-        #     dx = int(math.fabs(int(hole_under_bird_x - 200)))
-        #     if dx < 2 * self.hole.sigma:
-        #         hole_y = self.hole.get_y(hole_under_bird_x)
-        #         if self.hole.is_up:
-        #             if self.bird_y > hole_y:
-        #                 delta_health = -5
-        #         elif self.bird_y < self.height - hole_y:
-        #             delta_health = -5
+        if self.hole:
+            hole_under_bird_x = self.width - self.hole_dx + 3 * self.hole.sigma
+            dx = int(math.fabs(int(hole_under_bird_x - 200)))
+            if dx < 2 * self.hole.sigma:
+                hole_y = self.hole.get_y(3 * self.hole.sigma - dx)
+                if self.hole.is_up:
+                    if self.bird_y > hole_y:
+                        delta_health = -5
+                elif self.bird_y < self.height - hole_y:
+                    delta_health = -5
 
         return {'delta_health': delta_health, 'delta_score': 0}
 
@@ -110,21 +120,21 @@ class VetaMiniGame(AbstractMiniGame):
         background_rect = [a / 2 for a in graphical_ui.canvas.get_size()]
         self.backgrounds[0].transform(center=background_rect)
         self.backgrounds[1].transform(center=background_rect)
-        bird_height = self.bird.image.get_size()[1] // 2
+        bird_height = self.bird[self.up_or_down_bird].image.get_size()[1] // 2
 
         if self.bird_y > self.height - bird_height:
             self.bird_y = self.height - bird_height
         elif self.bird_y < bird_height:
             self.bird_y = bird_height
 
-        self.bird.transform(center=(200, self.bird_y))
+        self.bird[self.up_or_down_bird].transform(center=(200, self.bird_y))
         self.backgrounds[0].transform_relative(move=(- self.dx, 0))
         x = self.backgrounds[0].image.get_size()[0]
         self.backgrounds[1].transform_relative(move=(x - self.dx, 0))
 
         self.backgrounds[0].draw(graphical_ui.canvas)
         self.backgrounds[1].draw(graphical_ui.canvas)
-        self.bird.draw(graphical_ui.canvas)
+        self.bird[self.up_or_down_bird].draw(graphical_ui.canvas)
         if self.hole and self.hole_dx > 2 * self.hole.points_delta and not self.hole.should_be_destroyed:
             pygame.draw.polygon(graphical_ui.canvas, (0, 0, 0), self.hole.get_points(int(self.hole_dx), self.width))
             pygame.draw.aalines(graphical_ui.canvas, (0, 0, 0), True, self.hole.get_points(int(self.hole_dx), self.width))
