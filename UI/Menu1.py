@@ -1,6 +1,9 @@
 from Engine.Interface import AbstractUI
 import pygame
 import pygame.gfxdraw
+from UI.GameUI import GameUI
+from Engine.Level import LevelRuntime, Level
+from MiniGames.StubMinigame import StubMinigame
 
 
 class Menu(AbstractUI, pygame.sprite.Sprite):
@@ -18,6 +21,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
                                    self.canvas.get_height() - self.player.image.get_height()//2)
         self.player_group = pygame.sprite.Group()
         self.player_group.add(self.player)
+        self.turning = 1
 
         # луч
         self.light_on = True
@@ -38,34 +42,51 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         pygame.gfxdraw.filled_circle(self.ray.image, self.canvas.get_width()//2, self.canvas.get_height()//4, 0, (0, 0, 0))
         self.nothing.rect = self.nothing.image.get_rect()
         self.game_list = [self.nothing, self.nothing, self.nothing]
-        self.n_center = 3
+        self.n_icons = 0
         self.icon_group = pygame.sprite.Group()
         self.icon_group.add(*self.game_list)
-        self.turning = 0
+
+        # уровни
+        level = Level(4, 120, None, self)
+        level.load(StubMinigame)
+        self.levels = [level]*3
 
     def key_press(self, event):
         if event.key == pygame.K_h or event.key == pygame.K_LEFT or event.key == pygame.K_a:
-            self.turning -= 1
+            self.turning += 1
+            self.turning = self.turning % 3
 
         elif event.key == pygame.K_l or event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-            self.turning += 1
+            self.turning -= 1
+            self.turning = self.turning%3
+
+        if event.key == pygame.K_SPACE:
+            runtime = LevelRuntime()
+            runtime.load(self.levels[self.turning])
+            return GameUI(self.canvas), runtime
 
 
     def update(self):
-        if self.turning == 0:
+        if self.turning == 2:
             self.player.image = self.source_light
             self.ray.rect.center = (self.canvas.get_width()//2, self.canvas.get_height()//2)
+        elif self.turning == 0:
+            self.player.image = pygame.transform.rotate(self.source_light, 30)
+            self.ray.rect.center = (int(0.2 * self.canvas.get_width()), self.ray.image.get_height()//2)
         elif self.turning == 1:
-            self.player.image = pygame.transform.rotate(self.source_light, 25)
-            self.ray.rect.center = (int(0.25 * self.canvas.get_width()), self.ray.image.get_height()//2)
-        elif self.turning == -1:
-            self.player.image = pygame.transform.rotate(self.source_light, -25)
-            self.ray.rect.center = (int(0.75 * self.canvas.get_width()), self.ray.image.get_height()//2)
+            self.player.image = pygame.transform.rotate(self.source_light, -30)
+            self.ray.rect.center = (int(0.8 * self.canvas.get_width()), self.ray.image.get_height()//2)
 
     def draw_widgets(self):
         self.clean_canvas()
         self.player_group.draw(self.canvas)
-        #self.icon_group.draw(self.canvas)
+        self.icon_group.draw(self.canvas)
 
     def add_level(self, level):
-        pass
+        if "icon" not in level.metadata:
+            level.metadata['icon'] = self.nothing.image
+
+        new_icon = pygame.image.load(level.metadata['icon']).convert_alpha(self.canvas)
+        self.game_list[self.n_icons].image = new_icon
+        self.game_list[self.n_icons].rect = new_icon.get_rect()
+        self.levels.append(level)
