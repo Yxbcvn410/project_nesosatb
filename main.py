@@ -34,7 +34,7 @@ while True:
     graphical_ui.clean_canvas()
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if graphical_ui.key_press(event.dict):
+            if graphical_ui.key_press(event):
                 pass  # TODO change GUI
         elif event.type == pygame.QUIT:
             exit(0)
