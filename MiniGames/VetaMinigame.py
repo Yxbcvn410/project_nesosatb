@@ -91,6 +91,18 @@ class Background:
         if self.dx >= self.length:
             self.dx %= self.length
 
+    def draw(self, canvas, width, height):
+        background_rect = [a / 2 for a in canvas.get_size()]
+        self.sprites[0].transform(center=background_rect)
+        self.sprites[1].transform(center=background_rect)
+
+        self.sprites[0].transform_relative(move=(- self.dx, 0))
+        x = self.sprites[0].image.get_size()[0]
+        self.sprites[1].transform_relative(move=(x - self.dx, 0))
+
+        self.sprites[0].draw(canvas)
+        self.sprites[1].draw(canvas)
+
 
 class VetaMiniGame(AbstractMiniGame):
     def __init__(self, life_time):
@@ -121,6 +133,7 @@ class VetaMiniGame(AbstractMiniGame):
             self.hole_dx += 10
 
         delta_health = 0
+        delta_score = 1
         # checking whether inside a Gaussian distribution
         if self.hole:
             hole_under_bird_x = self.width - self.hole_dx + 3 * self.hole.sigma
@@ -130,40 +143,37 @@ class VetaMiniGame(AbstractMiniGame):
                 if self.hole.is_up:
                     if self.bird.y > hole_y:
                         delta_health = -5
+                        delta_score = 0
                 elif self.bird.y < self.height - hole_y:
                     delta_health = -5
+                    delta_score = 0
 
-        return {'delta_health': delta_health, 'delta_score': 0}
+        return {'delta_health': delta_health, 'delta_score': delta_score}
 
-    def draw(self, time: dict, graphical_ui):
-        self.width, self.height = graphical_ui.canvas.get_size()
-        background_rect = [a / 2 for a in graphical_ui.canvas.get_size()]
-        self.bk.sprites[0].transform(center=background_rect)
-        self.bk.sprites[1].transform(center=background_rect)
+    def draw(self, time: dict, canvas):
+        self.width, self.height = canvas.get_size()
+
+        self.bk.draw(canvas, self.width, self.height)
+
         bird_height = self.bird.get_sprite().image.get_size()[1] // 2
-
         if self.bird.y > self.height - bird_height:
             self.bird.y = self.height - bird_height
         elif self.bird.y < bird_height:
             self.bird.y = bird_height
 
         self.bird.get_sprite().transform(center=(200, self.bird.y))
-        self.bk.sprites[0].transform_relative(move=(- self.bk.dx, 0))
-        x = self.bk.sprites[0].image.get_size()[0]
-        self.bk.sprites[1].transform_relative(move=(x - self.bk.dx, 0))
+        self.bird.get_sprite().draw(canvas)
 
-        self.bk.sprites[0].draw(graphical_ui.canvas)
-        self.bk.sprites[1].draw(graphical_ui.canvas)
-        self.bird.get_sprite().draw(graphical_ui.canvas)
         if self.hole and self.hole_dx > 2 * self.hole.points_delta and not self.hole.should_be_destroyed:
-            pygame.draw.polygon(graphical_ui.canvas, (0, 0, 0), self.hole.get_points(int(self.hole_dx), self.width))
-            pygame.draw.aalines(graphical_ui.canvas, (0, 0, 0), True, self.hole.get_points(int(self.hole_dx), self.width))
+            pygame.draw.polygon(canvas, (0, 0, 0), self.hole.get_points(int(self.hole_dx), self.width))
+            pygame.draw.aalines(canvas, (0, 0, 0), True,
+                                self.hole.get_points(int(self.hole_dx), self.width))
 
     def handle(self, event):
         if event['time']['beat_type'] > 0:
             if event['key']['key'] in (273, 119):
-                self.bird.y += 10 * math.log10(math.fabs(event['time']['delta']))
+                self.bird.y += 10 * math.log(math.fabs(event['time']['delta']), 50)
             elif event['key']['key'] in (274, 115):
-                self.bird.y -= 10 * math.log10(math.fabs(event['time']['delta']))
+                self.bird.y -= 10 * math.log(math.fabs(event['time']['delta']), 50)
 
         return {'delta_health': 0, 'delta_score': 0}
