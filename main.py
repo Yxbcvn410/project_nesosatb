@@ -7,9 +7,11 @@ from MiniGames.StubMinigame import StubMinigame
 from Engine.MiniGame import MiniGameWrapper
 from Engine.Media import Sprite
 
+pygame.mixer.pre_init(44100, -16, 1, 512)
+pygame.mixer.init()
 pygame.init()
 
-canvas = pygame.display.set_mode([1080, 720])
+canvas = pygame.display.set_mode([0, 0], pygame.FULLSCREEN)
 img = pygame.image.load('Assets/Artwork/exp_1.png')
 img = pygame.transform.rotozoom(img, 0, 10)
 img2 = pygame.image.load('Assets/Artwork/m_r1.png')
