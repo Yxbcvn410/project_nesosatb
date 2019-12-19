@@ -2,6 +2,7 @@ import pygame
 
 
 class MusicPlayer:
+    """Возможно, этот класс бесполезен. Выпилить его надо, наверное..."""
     def __init__(self):
         self.music = None  # TODO
 
@@ -45,6 +46,13 @@ class Sprite:
             self.turn += kwargs['turn']
         if 'scale' in kwargs:
             self.scale *= kwargs['scale']
+
+    def get_property(self):
+        return {
+            'center': self.center,
+            'angle': self.turn,
+            'scale': self.scale
+        }
 
     def set_opacity(self, opacity):
         self.opacity = opacity
