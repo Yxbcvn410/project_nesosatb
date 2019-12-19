@@ -4,6 +4,8 @@ import pygame.gfxdraw
 from UI.GameUI import GameUI
 from Engine.Level import LevelRuntime, Level
 from MiniGames.StubMinigame import StubMinigame
+from Engine.MiniGame import MiniGameWrapper
+from Engine.Media import Sprite
 
 
 class Menu(AbstractUI, pygame.sprite.Sprite):
@@ -52,8 +54,10 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
 
         # уровни
         level = Level(4, 120, None, self)
-        level.load(StubMinigame)
-        self.levels = [level] * 3
+        game = MiniGameWrapper()
+        game.append_mini_game(StubMinigame(4, Sprite(pygame.image.load('Assets/Artwork/exp_1.png'))))
+        level.load(game)
+        self.levels = [level]*3
 
     def key_press(self, event):
         if event.key == pygame.K_h or event.key == pygame.K_LEFT or event.key == pygame.K_a:

@@ -35,6 +35,7 @@ class MiniGameWrapper(AbstractMiniGame):
         super().__init__(0)
         self.__mini_games = []
         self.active_mini_game = None
+        self.current_mini_game_score = 0
 
     def append_mini_game(self, mini_game, offset=0):
         """Добавляем мини-игру. По-другому добавлять мини-игры нельзя!"""
@@ -63,6 +64,7 @@ class MiniGameWrapper(AbstractMiniGame):
 
         if self.active_mini_game.is_over(time):
             # Текущая мини-игра закончилась, ищем следующую
+            self.current_mini_game_score = 0
             self.active_mini_game = self.__get_nearest_future_mini_game(time)
             if self.active_mini_game is None:
                 return current_mini_game_stats
@@ -71,13 +73,16 @@ class MiniGameWrapper(AbstractMiniGame):
         minigame_time = dict(time)
         minigame_time['bars'] -= self.active_mini_game.start_time
         current_mini_game_stats = self.active_mini_game.update(minigame_time)
+        self.current_mini_game_score += current_mini_game_stats['delta_score']
         return current_mini_game_stats
 
     def handle(self, event):
         """Передать мини-игре событие нажатия"""
         if self.active_mini_game:
             event['time']['bars'] -= self.active_mini_game.start_time
-            return self.active_mini_game.handle(event)
+            current_mini_game_stats = self.active_mini_game.handle(event)
+            self.current_mini_game_score += current_mini_game_stats['delta_score']
+            return current_mini_game_stats
         return {'delta_health': 0, 'delta_score': 0}
         # То, как событие отобразится на графическом представлении, определяет мини-игра
 

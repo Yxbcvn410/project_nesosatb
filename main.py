@@ -19,10 +19,11 @@ img2 = pygame.transform.rotozoom(img2, 0, 10)
 
 clock = pygame.time.Clock()
 runtime = LevelRuntime()
-graphical_ui = Menu(canvas)
+graphical_ui = GameUI(canvas)
+graphical_ui.set_runtime(runtime)
 
 game = MiniGameWrapper()
-for i in range(8):
+for i in range(4):
     game.append_mini_game(StubMinigame(1, Sprite(img)))
     game.append_mini_game(StubMinigame(1, Sprite(img2)))
 
@@ -31,13 +32,19 @@ level.load(game)
 runtime.load(level)
 runtime.play()
 
+runtime = None
+graphical_ui = Menu(canvas)
+
 while True:
     clock.tick(FPS)
     graphical_ui.clean_canvas()
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if graphical_ui.key_press(event):
-                pass  # TODO change GUI
+            new_ui = graphical_ui.key_press(event)
+            if new_ui:
+                runtime = new_ui[1]
+                graphical_ui = new_ui[0]
+                graphical_ui.set_runtime(runtime)
         elif event.type == pygame.QUIT:
             exit(0)
     graphical_ui.update()

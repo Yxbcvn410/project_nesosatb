@@ -8,6 +8,11 @@ class AbstractUI(abc.ABC):
         self.canvas = canvas
         self.runtime = None
 
+    @abc.abstractmethod
+    def load_views(self, views: dict):
+        """Загружаем возможные интерфейсы для перехода. Каждый элемент - пара (UI, runtime)"""
+        pass
+
     def set_runtime(self, runtime):
         """Runtime - объект, контроллирующий выполнение. Можно в него вынести обработку нажатия."""
         self.runtime = runtime

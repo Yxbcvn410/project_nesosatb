@@ -28,4 +28,5 @@ class StubMinigame(AbstractMiniGame):
 
     def handle(self, event):
         print(str(event) + '\n')
-        return {'delta_health': 0, 'delta_score': 0}
+        self.bp.play()
+        return {'delta_health': 0, 'delta_score': (1 - (2 * abs(event['time']['delta'])) ** 0.3) * 30}

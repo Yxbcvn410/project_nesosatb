@@ -28,7 +28,8 @@ class Level:
         game_states_change = self.game.update(time)
         self.health -= game_states_change['delta_health']
         self.score += game_states_change['delta_score']
-        return not self.game.is_over(time) and (self.health > 0)
+        print(self.progress)
+        return self.game.is_over(time) or self.health < 0
 
     def draw(self, time: dict):
         self.game.draw(time, self.graphical_ui)
@@ -42,8 +43,8 @@ class Level:
 
     def get_stats(self):
         return {
-            'current_score': self.score,
-            'global_score': self.score,
+            'current_score': int(self.game.current_mini_game_score),
+            'global_score': int(self.score),
             'health_info': {'health': self.health, 'max': self.health_max},
             'progress': self.progress
         }
@@ -66,6 +67,7 @@ class LevelRuntime:
         return {
             'bars': beat_no // self.level.beat_size,
             'beats': beat_no % self.level.beat_size,
+            'beat_size': self.level.beat_size,
             'delta': beat_delta * self.level.bpm / 60,
             'beat_type':
                 -1 if beat_delta - (30 / self.level.bpm) > - 1 / FPS
