@@ -1,6 +1,5 @@
 import pygame
-
-from Engine.Media import Sprite, MusicPlayer
+from Engine.Media import Sprite
 from Engine.MiniGame import *
 
 
