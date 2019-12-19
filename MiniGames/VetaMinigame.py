@@ -78,16 +78,26 @@ class Bird:
         return self.birds[self.up_or_down_bird]
 
 
+class Background:
+    def __init__(self):
+        background = pygame.image.load(path.join(img_dir, 'background01.png')).convert()
+        background = pygame.transform.rotozoom(background, 0, 1.4)
+        self.sprites = [Sprite(background), Sprite(background)]
+        self.dx = 0
+        self.length = self.sprites[0].image.get_size()[0]
+
+    def change_dx(self, time):
+        self.dx = 150 * time
+        if self.dx >= self.length:
+            self.dx %= self.length
+
+
 class VetaMiniGame(AbstractMiniGame):
     def __init__(self, life_time):
         super().__init__(life_time)
         self.width, self.height = 1080, 720
-        background = pygame.image.load(path.join(img_dir, 'background01.png')).convert()
-        background = pygame.transform.rotozoom(background, 0, 1.4)
-        self.backgrounds = [Sprite(background), Sprite(background)]
-        self.dx = 0
-        self.bk_length = self.backgrounds[0].image.get_size()[0]
         self.bird = Bird()
+        self.bk = Background()
         self.hole = HoleForVetaMiniGame(rnd(30, 80), 720, rnd(0, 1))
         self.hole_dx = 0
 
@@ -101,9 +111,7 @@ class VetaMiniGame(AbstractMiniGame):
 
         # calculating x for background and bird pictures
         time = math.fabs(4 * time['bars'] + time['beats'] + time['delta'])
-        self.dx = 150 * time
-        if self.dx >= self.bk_length:
-            self.dx %= self.bk_length
+        self.bk.change_dx(time)
 
         # hole managing
         if self.hole.should_be_destroyed:
@@ -130,8 +138,8 @@ class VetaMiniGame(AbstractMiniGame):
     def draw(self, time: dict, graphical_ui):
         self.width, self.height = graphical_ui.canvas.get_size()
         background_rect = [a / 2 for a in graphical_ui.canvas.get_size()]
-        self.backgrounds[0].transform(center=background_rect)
-        self.backgrounds[1].transform(center=background_rect)
+        self.bk.sprites[0].transform(center=background_rect)
+        self.bk.sprites[1].transform(center=background_rect)
         bird_height = self.bird.get_sprite().image.get_size()[1] // 2
 
         if self.bird.y > self.height - bird_height:
@@ -140,12 +148,12 @@ class VetaMiniGame(AbstractMiniGame):
             self.bird.y = bird_height
 
         self.bird.get_sprite().transform(center=(200, self.bird.y))
-        self.backgrounds[0].transform_relative(move=(- self.dx, 0))
-        x = self.backgrounds[0].image.get_size()[0]
-        self.backgrounds[1].transform_relative(move=(x - self.dx, 0))
+        self.bk.sprites[0].transform_relative(move=(- self.bk.dx, 0))
+        x = self.bk.sprites[0].image.get_size()[0]
+        self.bk.sprites[1].transform_relative(move=(x - self.bk.dx, 0))
 
-        self.backgrounds[0].draw(graphical_ui.canvas)
-        self.backgrounds[1].draw(graphical_ui.canvas)
+        self.bk.sprites[0].draw(graphical_ui.canvas)
+        self.bk.sprites[1].draw(graphical_ui.canvas)
         self.bird.get_sprite().draw(graphical_ui.canvas)
         if self.hole and self.hole_dx > 2 * self.hole.points_delta and not self.hole.should_be_destroyed:
             pygame.draw.polygon(graphical_ui.canvas, (0, 0, 0), self.hole.get_points(int(self.hole_dx), self.width))
