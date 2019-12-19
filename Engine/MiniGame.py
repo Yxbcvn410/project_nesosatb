@@ -93,3 +93,6 @@ class MiniGameWrapper(AbstractMiniGame):
     def reset(self):
         self.active_mini_game = self.__get_nearest_future_mini_game({'bars': 0})
         self.event_queue = []
+
+    def get_waypoints(self):
+        pass  # TODO

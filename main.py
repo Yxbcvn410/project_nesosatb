@@ -41,7 +41,7 @@ while True:
     graphical_ui.clean_canvas()
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            new_ui = graphical_ui.key_press(event)
+            new_ui = graphical_ui.key_press(event.dict)
             if new_ui:
                 old_runtime = copy.copy(runtime)
                 runtime = new_ui[1]

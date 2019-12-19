@@ -4,6 +4,7 @@ import pygame.gfxdraw
 from UI.GameUI import GameUI
 from Engine.Level import LevelRuntime, Level
 from MiniGames.StubMinigame import StubMinigame
+from MiniGames.VetaMinigame import VetaMiniGame
 from Engine.MiniGame import MiniGameWrapper
 from Engine.Media import Sprite
 import copy
@@ -61,21 +62,22 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         game = MiniGameWrapper()
         game.append_mini_game(
             StubMinigame(4, Sprite(pygame.transform.rotozoom(pygame.image.load('Assets/Artwork/exp_1.png'), 0, 10))))
+        game.append_mini_game(VetaMiniGame(4))
         level.load(game)
         self.levels = [level] * 3
 
     def key_press(self, event):
-        if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+        if event['key'] == pygame.K_q or event['key'] == pygame.K_ESCAPE:
             exit(0)
-        if event.key == pygame.K_h or event.key == pygame.K_LEFT or event.key == pygame.K_a:
+        if event['key'] == pygame.K_h or event['key'] == pygame.K_LEFT or event['key'] == pygame.K_a:
             self.turning += 1
             self.turning = self.turning % 3
 
-        elif event.key == pygame.K_l or event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+        elif event['key'] == pygame.K_l or event['key'] == pygame.K_RIGHT or event['key'] == pygame.K_d:
             self.turning -= 1
             self.turning = self.turning % 3
 
-        if event.key == pygame.K_SPACE:
+        if event['key'] == pygame.K_SPACE:
             runtime = LevelRuntime()
             self.levels[self.turning].reset()
             runtime.load(self.levels[self.turning])

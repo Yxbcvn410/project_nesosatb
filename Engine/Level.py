@@ -23,12 +23,15 @@ class Level:
     def update(self, time: dict):
         """Обновить текущую мини-игру и графическое представление
         Возврат True если игра закончена, иначе False"""
-        self.progress = time['bars'] / self.game.life_time
-        game_states_change = self.game.update(time)
-        self.health -= game_states_change['delta_health']
-        self.score += game_states_change['delta_score']
-        print(self.progress)
-        return self.game.is_over(time) or self.health < 0
+        is_level_over = self.game.is_over(time) or self.health < 0
+        if not is_level_over:
+            self.progress = (time['bars'] + (time['beats'] + time['delta'] + 0.5) / time['beat_size']) / self.game.life_time
+            game_states_change = self.game.update(time)
+            self.health -= game_states_change['delta_health']
+            self.score += game_states_change['delta_score']
+        else:
+            self.progress = 1.
+        return is_level_over
 
     def draw(self, canvas, time: dict):
         self.game.draw(time, canvas)
@@ -53,6 +56,9 @@ class Level:
         self.progress = 0.
         self.health = self.health_max
         self.game.reset()
+
+    def get_waypoints(self):
+        return self.game.get_waypoints()
 
 
 class LevelRuntime:

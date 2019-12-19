@@ -26,6 +26,5 @@ class StubMinigame(AbstractMiniGame):
         self.spr.draw(canvas)
 
     def handle(self, event):
-        print(str(event) + '\n')
         self.bp.play()
         return {'delta_health': 0, 'delta_score': (1 - (2 * abs(event['time']['delta'])) ** 0.3) * 30}
