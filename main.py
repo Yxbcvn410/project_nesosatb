@@ -2,6 +2,7 @@ import pygame
 
 from Engine.Level import LevelRuntime, FPS, Level
 from UI.GameUI import GameUI
+from UI.Menu1 import Menu
 from MiniGames.StubMinigame import StubMinigame
 from Engine.MiniGame import MiniGameWrapper
 from Engine.Media import Sprite
@@ -16,7 +17,7 @@ img2 = pygame.transform.rotozoom(img2, 0, 10)
 
 clock = pygame.time.Clock()
 runtime = LevelRuntime()
-graphical_ui = GameUI(canvas, runtime)
+graphical_ui = Menu(canvas)
 
 game = MiniGameWrapper()
 for i in range(8):
