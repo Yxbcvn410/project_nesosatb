@@ -3,6 +3,7 @@ import pygame
 
 class MusicPlayer:
     """Возможно, этот класс бесполезен. Выпилить его надо, наверное..."""
+
     def __init__(self):
         self.music = None  # TODO
 
@@ -65,6 +66,11 @@ class Sprite:
         target.blit(self.temp, location)
 
     def draw(self, surface):
-        transformed_instance = pygame.transform.rotozoom(self.image, self.turn, self.scale)
+        transformed_instance = self.image
+        if self.turn != 0 or self.scale != 1:  # Если не нужно менять размер - не надо
+            transformed_instance = pygame.transform.rotozoom(transformed_instance, self.turn, self.scale)
         left_upper_angle = tuple(pt[0] - pt[1] * 0.5 for pt in zip(self.center, transformed_instance.get_size()))
-        self.__blit_alpha__(surface, transformed_instance, left_upper_angle, self.opacity)
+        if self.opacity != 1:  # Если нет прозрачности, можно использовать прямую отрисовку
+            self.__blit_alpha__(surface, transformed_instance, left_upper_angle, self.opacity)
+        else:
+            surface.blit(transformed_instance, left_upper_angle)

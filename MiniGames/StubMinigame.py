@@ -1,9 +1,10 @@
 import pygame
+
+import Engine.MiniGame
 from Engine.Media import Sprite
-from Engine.MiniGame import *
 
 
-class StubMinigame(AbstractMiniGame):
+class StubMinigame(Engine.MiniGame.AbstractMiniGame):
     def __init__(self, life_time, sprite, base_color=(0, 0, 0)):
         super().__init__(life_time)
         self.spr: Sprite = sprite
@@ -27,4 +28,4 @@ class StubMinigame(AbstractMiniGame):
 
     def handle(self, event):
         self.bp.play()
-        return {'delta_health': 0, 'delta_score': (1 - (2 * abs(event['time']['delta'])) ** 0.3) * 30}
+        return {'delta_health': -50, 'delta_score': (1 - (2 * abs(event['time']['delta'])) ** 0.3) * 30}

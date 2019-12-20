@@ -41,6 +41,8 @@ class MiniGameWrapper(AbstractMiniGame):
         """Добавляем мини-игру. По-другому добавлять мини-игры нельзя!"""
         if mini_game.start_time != 0:
             raise AssertionError()  # Мини-игра уже сдвинута!
+        if offset < 0:
+            raise ValueError()  # Наложение мини-игр по времени недопустимо!
         self.__mini_games.append(mini_game)
         self.__mini_games[-1].start_time += offset + self.life_time
         self.active_mini_game = self.__get_nearest_future_mini_game({'bars': 0})
@@ -92,7 +94,15 @@ class MiniGameWrapper(AbstractMiniGame):
 
     def reset(self):
         self.active_mini_game = self.__get_nearest_future_mini_game({'bars': 0})
+        self.current_mini_game_score = 0
         self.event_queue = []
 
     def get_waypoints(self):
-        pass  # TODO
+        last_mini_game_type = None
+        waypoints = []
+        for mini_game in self.__mini_games:
+            if type(mini_game) != last_mini_game_type:
+                waypoints.append(mini_game.start_time)
+                last_mini_game_type = type(mini_game)
+        waypoints.append(self.__mini_games[-1].start_time + self.__mini_games[-1].life_time)
+        return waypoints

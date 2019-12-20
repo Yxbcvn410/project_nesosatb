@@ -1,12 +1,12 @@
-import pygame, copy
+import copy
+import pygame
 
 from Engine.Level import LevelRuntime, FPS, Level
 from Engine.Media import Sprite
+from Engine.MiniGame import MiniGameWrapper
+from MiniGames.StubMinigame import StubMinigame
 from UI.GameUI import GameUI
 from UI.Menu1 import Menu
-from MiniGames.StubMinigame import StubMinigame
-from Engine.MiniGame import MiniGameWrapper
-from Engine.Interface import AnimationRuntime
 
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.mixer.init()
@@ -39,6 +39,7 @@ graphical_ui = Menu(canvas)
 while True:
     clock.tick(FPS)
     graphical_ui.clean_canvas()
+    graphical_ui.update()
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             new_ui = graphical_ui.key_press(event.dict)
@@ -51,8 +52,8 @@ while True:
                 graphical_ui.set_runtime(runtime)
                 if runtime:
                     runtime.play()
+                graphical_ui.update()
         elif event.type == pygame.QUIT:
             exit(0)
-    graphical_ui.update()
     graphical_ui.draw_widgets()
     pygame.display.update()
