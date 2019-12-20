@@ -25,7 +25,7 @@ class AbstractMiniGame(abc.ABC):
         return {'delta_health': 0, 'delta_score': 0}
 
     @abc.abstractmethod
-    def draw(self, time: dict, graphical_ui):
+    def draw(self, time: dict, canvas):
         """Отрисовать компоненты мини-игры"""
         pass
 
@@ -35,11 +35,14 @@ class MiniGameWrapper(AbstractMiniGame):
         super().__init__(0)
         self.__mini_games = []
         self.active_mini_game = None
+        self.current_mini_game_score = 0
 
     def append_mini_game(self, mini_game, offset=0):
         """Добавляем мини-игру. По-другому добавлять мини-игры нельзя!"""
         if mini_game.start_time != 0:
             raise AssertionError()  # Мини-игра уже сдвинута!
+        if offset < 0:
+            raise ValueError()  # Наложение мини-игр по времени недопустимо!
         self.__mini_games.append(mini_game)
         self.__mini_games[-1].start_time += offset + self.life_time
         self.active_mini_game = self.__get_nearest_future_mini_game({'bars': 0})
@@ -63,6 +66,7 @@ class MiniGameWrapper(AbstractMiniGame):
 
         if self.active_mini_game.is_over(time):
             # Текущая мини-игра закончилась, ищем следующую
+            self.current_mini_game_score = 0
             self.active_mini_game = self.__get_nearest_future_mini_game(time)
             if self.active_mini_game is None:
                 return current_mini_game_stats
@@ -71,16 +75,34 @@ class MiniGameWrapper(AbstractMiniGame):
         minigame_time = dict(time)
         minigame_time['bars'] -= self.active_mini_game.start_time
         current_mini_game_stats = self.active_mini_game.update(minigame_time)
+        self.current_mini_game_score += current_mini_game_stats['delta_score']
         return current_mini_game_stats
 
     def handle(self, event):
         """Передать мини-игре событие нажатия"""
         if self.active_mini_game:
             event['time']['bars'] -= self.active_mini_game.start_time
-            return self.active_mini_game.handle(event)
+            current_mini_game_stats = self.active_mini_game.handle(event)
+            self.current_mini_game_score += current_mini_game_stats['delta_score']
+            return current_mini_game_stats
         return {'delta_health': 0, 'delta_score': 0}
         # То, как событие отобразится на графическом представлении, определяет мини-игра
 
-    def draw(self, time: dict, graphical_ui):
+    def draw(self, time: dict, canvas):
         if self.active_mini_game:
-            self.active_mini_game.draw(time, graphical_ui)
+            self.active_mini_game.draw(time, canvas)
+
+    def reset(self):
+        self.active_mini_game = self.__get_nearest_future_mini_game({'bars': 0})
+        self.current_mini_game_score = 0
+        self.event_queue = []
+
+    def get_waypoints(self):
+        last_mini_game_type = None
+        waypoints = []
+        for mini_game in self.__mini_games:
+            if type(mini_game) != last_mini_game_type:
+                waypoints.append(mini_game.start_time)
+                last_mini_game_type = type(mini_game)
+        waypoints.append(self.__mini_games[-1].start_time + self.__mini_games[-1].life_time)
+        return waypoints
