@@ -12,6 +12,28 @@ LEMON = (255, 248, 176)
 ORANGE = (240, 184, 0)
 
 
+class PlayerObject(pygame.sprite.Sprite):
+    def __init__(self, image):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = image
+        self.rect = self.image.get_rect()
+
+
+class Icon(pygame.sprite.Sprite):
+    def __init__(self, image, path):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.path = path
+
+
+class Decor(pygame.sprite.Sprite):
+    def __init__(self, image):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = image
+        self.rect = self.image.get_rect()
+
+
 class Menu(AbstractUI, pygame.sprite.Sprite):
 
     def load_views(self, views: dict):
@@ -20,12 +42,10 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
     def __init__(self, canvas):
         super().__init__(canvas)
         # добавление фонарика
-        self.player = pygame.sprite.Sprite()
         self.source_light = pygame.image.load("Assets/Artwork/flashlight_orange.png").convert_alpha(self.canvas)
         self.source_light = pygame.transform.scale(self.source_light,
-                                                   (self.canvas.get_width() // 4, self.canvas.get_height() // 4))
-        self.player.image = self.source_light
-        self.player.rect = self.source_light.get_rect()
+                                              (self.canvas.get_width() // 4, self.canvas.get_height() // 4))
+        self.player = PlayerObject(image=self.source_light)
         self.player.rect.center = (self.canvas.get_width() // 2,
                                    self.canvas.get_height() - self.player.image.get_height() // 2)
         self.player_group = pygame.sprite.Group()
