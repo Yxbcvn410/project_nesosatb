@@ -1,13 +1,13 @@
-from Engine.Interface import AbstractUI
 import pygame
 import pygame.gfxdraw
-from UI.GameUI import GameUI
+
+from Engine.Interface import AbstractUI
 from Engine.Level import LevelRuntime, Level
+from Engine.Media import Sprite
+from Engine.MiniGame import MiniGameWrapper
 from MiniGames.StubMinigame import StubMinigame
 from MiniGames.VetaMinigame import VetaMiniGame
-from Engine.MiniGame import MiniGameWrapper
-from Engine.Media import Sprite
-import copy
+from UI.GameUI import GameUI
 
 # colors
 LEMON = (255, 248, 176)
@@ -58,7 +58,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.icon_group.add(*self.game_list)
 
         # уровни
-        level = Level(4, 120, None)
+        level = Level(120)
         game = MiniGameWrapper()
         game.append_mini_game(
             StubMinigame(4, Sprite(pygame.transform.rotozoom(pygame.image.load('Assets/Artwork/exp_1.png'), 0, 10))))
@@ -81,7 +81,10 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
             runtime = LevelRuntime()
             self.levels[self.turning].reset()
             runtime.load(self.levels[self.turning])
-            return GameUI(self.canvas), runtime
+            game_ui = GameUI(self.canvas)
+            game_ui.set_runtime(runtime)
+            runtime.play()
+            return game_ui
 
     def update(self):
         if self.turning == 2:

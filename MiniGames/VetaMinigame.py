@@ -1,10 +1,11 @@
-import pygame
-import sys
-from os import path
 import math
-from Engine.MiniGame import AbstractMiniGame
-from Engine.Media import Sprite
+from os import path
 from random import randint as rnd
+
+import pygame
+
+from Engine.Media import Sprite
+from Engine.MiniGame import AbstractMiniGame
 
 img_dir = path.join(path.dirname(__file__), '../Assets/Artwork/img')
 
@@ -105,8 +106,16 @@ class Background:
 
 
 class VetaMiniGame(AbstractMiniGame):
+    def reset(self):
+        pass  # TODO
+
     def __init__(self, life_time):
         super().__init__(life_time)
+        # TODO Если твоя игра расчитана на обределённый размер такта, необходимо бросить исключение
+        # По умолчанию размер такта равен 4, но может произойти и иное
+        # Это делается вот так:
+        if self.beat_size != 4:
+            raise AssertionError()  # Недействительный размер такта!
         self.width, self.height = 1080, 720
         self.bird = Bird()
         self.bk = Background()
