@@ -60,9 +60,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         # уровни
         level = Level(4, 120, None)
         game = MiniGameWrapper()
-        game.append_mini_game(
-            StubMinigame(4, Sprite(pygame.transform.rotozoom(pygame.image.load('Assets/Artwork/exp_1.png'), 0, 10))))
-        game.append_mini_game(VetaMiniGame(4))
+        game.append_mini_game(VetaMiniGame(42))
         level.load(game)
         self.levels = [level] * 3
 
