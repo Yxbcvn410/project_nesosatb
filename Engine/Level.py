@@ -1,32 +1,37 @@
 import time
 
-from Engine.Media import MusicPlayer
-
-FPS = 30
+import pygame
 
 
 class Level:
-    def __init__(self, beat_size, bpm, music, health_max=1000, metadata=None):
-        self.beat_size = beat_size
+    def __init__(self, bpm, health_max=100, metadata=None, empty_bars=1):
         self.bpm = bpm
-        self.music = music
         self.game = None
         self.health_max = health_max
         self.health = health_max
         self.score = 0
         self.progress = 0.
         self.metadata = metadata
+        self.empty_bars = empty_bars
 
     def load(self, wrapper):
         self.game = wrapper
 
+    def get_beat_size(self):
+        return self.game.beat_size
+
     def update(self, time_dict: dict):
-        """Обновить текущую мини-игру и графическое представление
+        """Обновить текущую мини-игру
         Возврат True если игра закончена, иначе False"""
+        time_dict['bars'] -= self.empty_bars
+        if time_dict['bars'] < 0:
+            self.progress = (self.empty_bars + time_dict['bars'] + (time_dict['beats'] + time_dict['delta'] + 0.5) /
+                             time_dict['beat_size']) / (self.game.life_time + self.empty_bars)
+            return False
         is_level_over = self.game.is_over(time_dict) or self.health <= 0
         if not is_level_over:
-            self.progress = (time_dict['bars'] + (time_dict['beats'] + time_dict['delta'] + 0.5) / time_dict[
-                'beat_size']) / self.game.life_time
+            self.progress = (self.empty_bars + time_dict['bars'] + (time_dict['beats'] + time_dict['delta'] + 0.5) /
+                             time_dict['beat_size']) / (self.game.life_time + self.empty_bars)
             game_states_change = self.game.update(time_dict)
             self.score += game_states_change['delta_score']
             self.health += game_states_change['delta_health']
@@ -39,10 +44,16 @@ class Level:
         return is_level_over
 
     def draw(self, canvas, time_dict: dict):
+        time_dict['bars'] -= self.empty_bars
+        if time_dict['bars'] < 0:
+            return
         self.game.draw(time_dict, canvas)
 
     def handle_event(self, event):
         """Передать мини-игре событие нажатия"""
+        event['time']['bars'] -= self.empty_bars
+        if event['time']['bars'] < 0:
+            return
         game_states_change = self.game.handle(event)
         self.health += game_states_change['delta_health']
         self.score += game_states_change['delta_score']
@@ -66,7 +77,7 @@ class Level:
         self.game.reset()
 
     def get_waypoints(self):
-        return [wp / self.game.life_time for wp in self.game.get_waypoints()]
+        return [(wp + self.empty_bars) / (self.game.life_time + self.empty_bars) for wp in self.game.get_waypoints()]
 
 
 class LevelRuntime:
@@ -76,7 +87,8 @@ class LevelRuntime:
         self.last_upd_time = time.time()
         self.dt = 0.
         self.paused = True
-        self.music = MusicPlayer()
+        self.music = False
+        self.music_start_flag = False
 
     def get_time_dict(self):
         """Получить расширенную информацию о текущем времени"""
@@ -86,14 +98,14 @@ class LevelRuntime:
             beat_delta = beat_delta - 60 / self.level.bpm
             beat_no += 1
         return {
-            'bars': beat_no // self.level.beat_size,
-            'beats': beat_no % self.level.beat_size,
-            'beat_size': self.level.beat_size,
+            'bars': beat_no // self.level.get_beat_size(),
+            'beats': beat_no % self.level.get_beat_size(),
+            'beat_size': self.level.get_beat_size(),
             'delta': beat_delta * self.level.bpm / 60,
             'beat_type':
                 -1 if beat_delta - self.dt < -0.5 < beat_delta
                 else 0 if not self.dt > beat_delta > 0
-                else 1 if beat_no % self.level.beat_size
+                else 1 if beat_no % self.level.get_beat_size()
                 else 2
         }
 
@@ -117,18 +129,28 @@ class LevelRuntime:
 
     def pause(self):
         """Поставить уровень на паузу"""
-        self.music.pause()
+        if self.music:
+            pygame.mixer.music.pause()
         self.paused = True
 
     def play(self):
         """Запустить уровень (После загрузки или паузы)"""
         if self.level is None:
             raise AssertionError  # Уровень не загружен!
-        self.music.play()
+        if self.music:
+            if self.music_start_flag:
+                pygame.mixer.music.unpause()
+            else:
+                self.music_start_flag = True
+                pygame.mixer.music.play()
         self.paused = False
         self.last_upd_time = time.time()
 
     def load(self, level: Level):
         """Загрузить уровень"""
         self.level = level
-        self.music.load(self.level.music)
+        if 'music' in level.metadata:
+            self.music = True
+            pygame.mixer.music.load(level.metadata['music'])
+            if 'music_offset' in level.metadata:
+                self.active_time = level.metadata['music_offset']

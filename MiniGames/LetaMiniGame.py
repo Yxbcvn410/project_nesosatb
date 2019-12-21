@@ -1,8 +1,5 @@
-import pygame
-from os import path
 import math
-from Engine.MiniGame import AbstractMiniGame
-from Engine.Media import Sprite
+from os import path
 from random import choice
 from random import random as rnd
 
@@ -11,6 +8,11 @@ from random import random as rnd
 # those letters that relate to this musical moment or earlier one
 # and then with all letters displayed we check if player prints them
 
+import pygame
+
+from Engine.Media import Sprite
+from Engine.MiniGame import AbstractMiniGame
+
 img_dir = path.join(path.dirname(__file__), '../Assets/Artwork/img')
 bar_width = 80
 beats_number = 4
@@ -18,6 +20,9 @@ characters = ('w', 's', 'a', 'd')
 
 
 class LetaMiniGame(AbstractMiniGame):
+    def reset(self):
+        pass
+
     def __init__(self, life_time, letters=None):
         super().__init__(life_time)
         self.letters = letters

@@ -1,40 +1,23 @@
-import copy
 import pygame
 
-from Engine.Level import LevelRuntime, FPS, Level
-from Engine.Media import Sprite
-from Engine.MiniGame import MiniGameWrapper
-from MiniGames.StubMinigame import StubMinigame
-from UI.GameUI import GameUI
+from UI.Disclaimer import Disclaimer
 from UI.Menu1 import Menu
+
+FPS = 30
 
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.mixer.init()
 pygame.init()
 
 canvas = pygame.display.set_mode([0, 0], pygame.FULLSCREEN)
-img = pygame.image.load('Assets/Artwork/exp_1.png')
-img = pygame.transform.rotozoom(img, 0, 10)
-img2 = pygame.image.load('Assets/Artwork/m_r1.png')
-img2 = pygame.transform.rotozoom(img2, 0, 10)
+pygame.mouse.set_cursor((8, 8), (0, 0), (0,) * 8, (0,) * 8)
 
 clock = pygame.time.Clock()
-runtime = LevelRuntime()
-graphical_ui = GameUI(canvas)
-graphical_ui.set_runtime(runtime)
 
-game = MiniGameWrapper()
-for i in range(4):
-    game.append_mini_game(StubMinigame(1, Sprite(img)))
-    game.append_mini_game(StubMinigame(1, Sprite(img2)))
+ui_context = {'menu': Menu(canvas), 'disclaimer': Disclaimer(canvas)}
 
-level = Level(4, 120, None, graphical_ui)
-level.load(game)
-runtime.load(level)
-runtime.play()
-
-runtime = None
-graphical_ui = Menu(canvas)
+graphical_ui = ui_context['disclaimer']
+graphical_ui.load_ui_context(ui_context)
 
 while True:
     clock.tick(FPS)
@@ -44,14 +27,11 @@ while True:
         if event.type == pygame.KEYDOWN:
             new_ui = graphical_ui.key_press(event.dict)
             if new_ui:
-                old_runtime = copy.copy(runtime)
-                runtime = new_ui[1]
-                old_ui = copy.copy(graphical_ui)
-                graphical_ui = new_ui[0]
-                graphical_ui.load_views({'old': (old_ui, old_runtime)})
-                graphical_ui.set_runtime(runtime)
-                if runtime:
-                    runtime.play()
+                if new_ui == 'EXIT':
+                    exit(0)  # TODO Try to exit
+                    continue
+                graphical_ui = new_ui
+                graphical_ui.load_ui_context(ui_context)
                 graphical_ui.update()
         elif event.type == pygame.QUIT:
             exit(0)

@@ -26,7 +26,7 @@ class Sprite:
         else:
             raise TypeError  # Image type not supported
 
-        self.center = (0, 0)
+        self.center = [0, 0]
         self.turn = 0
         self.scale = 1
         self.opacity = 1
@@ -34,25 +34,44 @@ class Sprite:
 
     def transform(self, **kwargs):
         if 'center' in kwargs:
-            self.center = kwargs['center']
+            self.center = list(kwargs['center'])
+            if 'x' in kwargs or 'y' in kwargs:
+                raise AssertionError  # Конфликт ключевых слов!
         if 'angle' in kwargs:
             self.turn = kwargs['angle']
         if 'scale' in kwargs:
             self.scale = kwargs['scale']
+        if 'x' in kwargs:
+            self.center[0] = kwargs['x']
+        if 'y' in kwargs:
+            self.center[1] = kwargs['y']
+        if 'opacity' in kwargs:
+            self.opacity = kwargs['opacity']
 
     def transform_relative(self, **kwargs):
         if 'move' in kwargs:
-            self.center = (sum(pt) for pt in zip(self.center, kwargs['move']))
+            self.center = [sum(pt) for pt in zip(self.center, kwargs['move'])]
         if 'turn' in kwargs:
             self.turn += kwargs['turn']
         if 'scale' in kwargs:
             self.scale *= kwargs['scale']
+        if 'move_x' in kwargs:
+            self.center[0] += kwargs['move_x']
+        if 'move_y' in kwargs:
+            self.center[1] += kwargs['move_y']
 
-    def get_property(self):
+    def get_property(self, number_only=False):
         return {
             'center': self.center,
             'angle': self.turn,
-            'scale': self.scale
+            'scale': self.scale,
+            'opacity': self.opacity
+        } if not number_only else {
+            'x': self.center[0],
+            'y': self.center[1],
+            'angle': self.turn,
+            'scale': self.scale,
+            'opacity': self.opacity
         }
 
     def set_opacity(self, opacity):

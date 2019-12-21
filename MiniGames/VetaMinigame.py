@@ -132,9 +132,16 @@ class Background:
 
 
 class VetaMiniGame(AbstractMiniGame):
-    def __init__(self, life_time, set_speed=None):
-        # set_speed should be scaling, not absolute parameter
+    def reset(self):
+        pass  # TODO
+
+    def __init__(self, life_time, set_speed=None)
         super().__init__(life_time)
+        # TODO Если твоя игра расчитана на обределённый размер такта, необходимо бросить исключение
+        # По умолчанию размер такта равен 4, но может произойти и иное
+        # Это делается вот так:
+        if self.beat_size != 4:
+            raise AssertionError()  # Недействительный размер такта!
         self.time = 0
         self.width, self.height = 1080, 720
         self.d_height = 0

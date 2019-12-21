@@ -1,30 +1,48 @@
-from Engine.Interface import AbstractUI
 import pygame
 import pygame.gfxdraw
-from UI.GameUI import GameUI
+
+from Engine.Interface import AbstractUI
 from Engine.Level import LevelRuntime, Level
-from MiniGames.StubMinigame import StubMinigame
+from Engine.MiniGame import MiniGameWrapper
 from MiniGames.LetaMiniGame import LetaMiniGame
 from MiniGames.VetaMinigame import VetaMiniGame
-from Engine.MiniGame import MiniGameWrapper
-from Engine.Media import Sprite
-import copy
+from UI.GameUI import GameUI
 
 # colors
 LEMON = (255, 248, 176)
 ORANGE = (240, 184, 0)
 
 
+class PlayerObject(pygame.sprite.Sprite):
+    def __init__(self, image):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = image
+        self.rect = self.image.get_rect()
+
+
+class Icon(pygame.sprite.Sprite):
+    def __init__(self, image, path):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.path = path
+
+
+class Decor(pygame.sprite.Sprite):
+    def __init__(self, image):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = image
+        self.rect = self.image.get_rect()
+
+
 class Menu(AbstractUI, pygame.sprite.Sprite):
     def __init__(self, canvas):
         super().__init__(canvas)
         # добавление фонарика
-        self.player = pygame.sprite.Sprite()
         self.source_light = pygame.image.load("Assets/Artwork/flashlight_orange.png").convert_alpha(self.canvas)
         self.source_light = pygame.transform.scale(self.source_light,
-                                                   (self.canvas.get_width() // 4, self.canvas.get_height() // 4))
-        self.player.image = self.source_light
-        self.player.rect = self.source_light.get_rect()
+                                              (self.canvas.get_width() // 4, self.canvas.get_height() // 4))
+        self.player = PlayerObject(image=self.source_light)
         self.player.rect.center = (self.canvas.get_width() // 2,
                                    self.canvas.get_height() - self.player.image.get_height() // 2)
         self.player_group = pygame.sprite.Group()
@@ -59,11 +77,13 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.icon_group.add(*self.game_list)
 
         # уровни
-        level = Level(4, 120, None)
+        level = Level(126, empty_bars=2)
         game = MiniGameWrapper()
-        game.append_mini_game(LetaMiniGame(7))
-        game.append_mini_game(VetaMiniGame(42, 2))
+        game.append_mini_game(LetaMiniGame(3, [['a', 'a'], ['b']]))
+        game.append_mini_game(LetaMiniGame(3, [['a', 'a'], ['b']]))
+        game.append_mini_game(VetaMiniGame(42))
         level.load(game)
+        level.metadata = {'music': 'Assets/Sound/Sabrepulse - Termination Shock.wav'}
         self.levels = [level] * 3
 
     def key_press(self, event):
@@ -81,7 +101,10 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
             runtime = LevelRuntime()
             self.levels[self.turning].reset()
             runtime.load(self.levels[self.turning])
-            return GameUI(self.canvas), runtime
+            game_ui = GameUI(self.canvas)
+            game_ui.set_runtime(runtime)
+            runtime.play()
+            return game_ui
 
     def update(self):
         if self.turning == 2:

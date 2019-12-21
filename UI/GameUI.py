@@ -10,11 +10,48 @@ WHITE = (255, 255, 255)
 BLUE = (0, 0, 200)
 GREEN = (0, 200, 0)
 RED = (255, 30, 0)
+BLACK = (0, 0, 0)
 
 MARGIN = 40
 RADIUS = 50
 HEART_MIN_R = 0.8
 HEART_PEAK_T = 0.35
+VOL_MAX = 20
+
+
+class SettingsPopup(AbstractUI):
+    def __init__(self, canvas):
+        super().__init__(canvas)
+        self.vol = round(pygame.mixer.music.get_volume() * VOL_MAX)
+
+    def key_press(self, event):
+        if event['key'] == pygame.K_LEFT:
+            if self.vol > 0:
+                self.vol -= 1
+        if event['key'] == pygame.K_RIGHT:
+            if self.vol < VOL_MAX:
+                self.vol += 1
+        pygame.mixer.music.set_volume(self.vol / VOL_MAX)
+
+    def update(self):
+        pass
+
+    def draw_widgets(self):
+        size = self.canvas.get_size()
+        center = [a / 2 for a in size]
+
+        # Background
+        pygame.draw.rect(self.canvas, WHITE, [0, center[1] - 40, size[0], 80])
+        pygame.draw.rect(self.canvas, BLACK, [0, center[1] - 35, size[0], 70])
+
+        font = pygame.font.Font('Assets/Fonts/Patapon.ttf', 40)
+        over_text = font.render('Volume: {}'.format(self.vol), 1, WHITE)
+        l_text = font.render('<L', 1, WHITE)
+        r_text = font.render('R>', 1, WHITE)
+        c = l_text.get_rect(center=center)
+        self.canvas.blit(over_text, over_text.get_rect(center=center))
+        self.canvas.blit(l_text, (MARGIN, c[1]))
+        self.canvas.blit(r_text, (size[0] - MARGIN - c[2], c[1]))
 
 
 class GameUI(AbstractUI):
@@ -27,7 +64,7 @@ class GameUI(AbstractUI):
         self.runtime = runtime
         self.control_keys = [pygame.K_p, pygame.K_ESCAPE, pygame.K_k, pygame.K_m]
         self.info = None
-        self.display_settings_popup = False
+        self.settings_popup = None
         self.display_controls = True
 
         heart_image = pygame.image.load('Assets/Artwork/UI/Game/heart.png')
@@ -38,38 +75,43 @@ class GameUI(AbstractUI):
     def key_press(self, event):
         if self.info['over']:
             if event['key'] == pygame.K_ESCAPE:
-                return self.views['old']
+                self.runtime.pause()
+                return self.views['menu']
             else:
                 return
 
-        if not (event['key'] in self.control_keys) and (self.runtime is not None):
+        if not (event['key'] in self.control_keys) and (self.runtime is not None) and not self.info['pause']:
             self.runtime.key_pressed(event)
             return
 
         # Toggle pause
         if event['key'] == pygame.K_p:
             if self.info['pause']:
-                if not self.display_settings_popup:
+                if not self.settings_popup:
                     self.runtime.play()
             else:
                 self.runtime.pause()
 
         if event['key'] == pygame.K_ESCAPE:
-            return self.views['old']
+            self.runtime.pause()
+            return self.views['menu']
 
         if event['key'] == pygame.K_k:
             if self.info['pause']:
-                if self.display_settings_popup:
-                    self.display_settings_popup = False
+                if self.settings_popup:
+                    self.settings_popup = None
                     self.runtime.play()
                 else:
-                    self.display_settings_popup = True
+                    self.settings_popup = SettingsPopup(self.canvas)
             if not self.info['pause']:
                 self.runtime.pause()
-                self.display_settings_popup = True
+                self.settings_popup = SettingsPopup(self.canvas)
 
         if event['key'] == pygame.K_m:
             self.display_controls = not self.display_controls
+
+        if self.settings_popup:
+            self.settings_popup.key_press(event)
 
     def draw_controls(self):
         size = self.canvas.get_size()
@@ -120,22 +162,26 @@ class GameUI(AbstractUI):
     def draw_widgets(self):
         center = [a / 2 for a in self.canvas.get_size()]
 
-        self.runtime.draw(self.canvas)
+        if not self.info['over']:
+            self.runtime.draw(self.canvas)
 
         if self.display_controls:
             self.draw_controls()
 
-        font = pygame.font.Font('Assets/Fonts/Patapon.ttf', MARGIN)
+        font = pygame.font.Font('Assets/Fonts/Patapon.ttf', 40)
 
         if self.info['over']:  # Нарисовать экран конца игры
             over_text = font.render('Game over. Press Esc to exit.', 1, WHITE)
             self.canvas.blit(over_text, over_text.get_rect(center=center))
-            return
-        if self.runtime.paused:
-            if self.display_settings_popup:  # Всплывающее меню настроек
-                pass  # TODO
+        elif self.runtime.paused:
+            if self.settings_popup:  # Всплывающее меню настроек
+                self.settings_popup.draw_widgets()
             else:  # Игра стоит на паузе
                 pause_text = font.render('Paused', 1, WHITE)
                 info_text = font.render('K - settings, M - toggle show controls, Esc - quit', 1, WHITE)
                 self.canvas.blit(pause_text, pause_text.get_rect(center=center))
                 self.canvas.blit(info_text, (center[0] - info_text.get_size()[0] / 2, center[1] + 40))
+        elif self.runtime.get_time_dict()['bars'] == 0 and \
+                (self.runtime.get_time_dict()['beats'] + 1) / self.runtime.get_time_dict()['beat_size'] <= 0.5:
+            ready_text = font.render('Get ready', 1, WHITE)
+            self.canvas.blit(ready_text, ready_text.get_rect(center=center))
