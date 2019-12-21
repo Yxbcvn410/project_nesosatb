@@ -8,6 +8,9 @@ FPS = 30
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.mixer.init()
 pygame.init()
+pygame.display.set_icon(pygame.image.load('Assets\Artwork\cat_blow.png'))
+#pygame.mixer.music.load('Assets\Music\menu1.wav')
+#pygame.mixer.music.play(-1)
 
 canvas = pygame.display.set_mode([0, 0], pygame.FULLSCREEN)
 pygame.mouse.set_cursor((8, 8), (0, 0), (0,) * 8, (0,) * 8)
