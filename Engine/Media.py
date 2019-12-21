@@ -1,22 +1,6 @@
 import pygame
 
 
-class MusicPlayer:
-    """Возможно, этот класс бесполезен. Выпилить его надо, наверное..."""
-
-    def __init__(self):
-        self.music = None  # TODO
-
-    def load(self, file):
-        print('Loaded music from {}'.format(file))  # TODO
-
-    def play(self):
-        print('Playback started')  # TODO
-
-    def pause(self):
-        print('Playback paused')  # TODO
-
-
 class Sprite:
     def __init__(self, image):
         if type(image) == str:

@@ -1,5 +1,8 @@
 import pygame
 
+from Engine.Level import Level
+from Engine.MiniGame import MiniGameWrapper
+from MiniGames.LetaMiniGame import LetaMiniGame
 from UI.Disclaimer import Disclaimer
 from UI.Menu1 import Menu
 
@@ -8,16 +11,25 @@ FPS = 30
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.mixer.init()
 pygame.init()
-pygame.display.set_icon(pygame.image.load('Assets\Artwork\cat_blow.png'))
-#pygame.mixer.music.load('Assets\Music\menu1.wav')
-#pygame.mixer.music.play(-1)
+# pygame.mixer.music.load('Assets\Music\menu1.wav')
+# pygame.mixer.music.play(-1)
 
 canvas = pygame.display.set_mode([0, 0], pygame.FULLSCREEN)
 pygame.mouse.set_cursor((8, 8), (0, 0), (0,) * 8, (0,) * 8)
 
 clock = pygame.time.Clock()
+menu = Menu(canvas)
 
-ui_context = {'menu': Menu(canvas), 'disclaimer': Disclaimer(canvas)}
+level1 = Level(126, empty_bars=2)
+level1.metadata = {'music': 'Assets/Sound/Sabrepulse - Termination Shock.wav'}
+
+menu.add_level(level1)
+game = MiniGameWrapper()
+game.append_mini_game(LetaMiniGame(2, [['a', 'd'], ['w', 'd']]))
+game.append_mini_game(LetaMiniGame(2, [['a', 'd'], ['w', 'd']]))
+game.append_mini_game(LetaMiniGame(2, [['a', 'd'], ['w', 'd']]))
+level1.load(game)
+ui_context = {'menu': menu, 'disclaimer': Disclaimer(canvas)}
 
 graphical_ui = ui_context['disclaimer']
 graphical_ui.load_ui_context(ui_context)

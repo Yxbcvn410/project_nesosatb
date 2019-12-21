@@ -124,6 +124,8 @@ class GameUI(AbstractUI):
         self.canvas.blit(l_sc_text, (0, 40))
 
         # Индикатор здоровья в правом верхнем углу
+        pygame.draw.ellipse(self.canvas, BLACK, [size[0] - MARGIN - RADIUS * 2.2, MARGIN, RADIUS * 2.2, RADIUS * 2.2])
+
         if self.info['over']:  # Полоса здоровья становится белым кругом в конце игры
             pygame.draw.ellipse(self.canvas, WHITE, [size[0] - MARGIN - RADIUS * 2, MARGIN, RADIUS * 2, RADIUS * 2], 5)
         else:

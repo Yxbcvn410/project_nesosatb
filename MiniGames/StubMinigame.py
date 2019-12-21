@@ -30,4 +30,4 @@ class StubMinigame(Engine.MiniGame.AbstractMiniGame):
         self.spr.draw(canvas)
 
     def handle(self, event):
-        return {'delta_health': -50, 'delta_score': (1 - (2 * abs(event['time']['delta'])) ** 0.3) * 30}
+        return {'delta_health': -10, 'delta_score': (1 - (2 * abs(event['time']['delta'])) ** 0.3) * 30}
