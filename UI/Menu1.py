@@ -51,11 +51,6 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
                             (int(0.5 * self.WIDTH), self.HEIGHT // 4),
                             (int(0.8 * self.WIDTH), self.HEIGHT // 4)]
 
-        # пустые иконки
-        self.red_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
-        self.blue_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
-        self.green_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
-
         # изображения
         self.empties = pygame.Surface((0, 0), pygame.SRCALPHA)
         self.darkie = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
@@ -70,11 +65,12 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         # иконка заглушки
         self.stupid = pygame.image.load("Assets/Artwork/dumb.png").convert_alpha(self.canvas)
         self.stupid = pygame.transform.scale(self.stupid, (self.WIDTH // 6, self.HEIGHT // 6))
-
+        
+        
         # добавление фонарика
         self.source_light = pygame.image.load("Assets/Artwork/flashlight_orange.png").convert_alpha(self.canvas)
         self.source_light = pygame.transform.scale(self.source_light,
-                                                   (self.WIDTH // 4, self.HEIGHT // 4))
+                                              (self.WIDTH // 4, self.HEIGHT // 4))
         self.player = PlayerObject(image=self.source_light)
         self.player.rect.center = (self.WIDTH // 2,
                                    self.HEIGHT - self.player.image.get_height() // 2)
@@ -86,6 +82,18 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.light_on = True
         self.ray = PlayerObject(image=self.light_stain)
         self.player_group.add(self.ray)
+
+        # пустые иконки
+        self.red_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
+        pygame.gfxdraw.filled_circle(self.red_circle, self.game_center[0][0], self.game_center[0][1],
+                                     self.player.image.get_width() // 5, RED)
+        self.blue_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
+        pygame.gfxdraw.filled_circle(self.blue_circle, self.game_center[1][0], self.game_center[1][1],
+                                     self.player.image.get_width() // 5, BLUE)
+        self.green_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
+        pygame.gfxdraw.filled_circle(self.green_circle, self.game_center[2][0], self.game_center[2][1],
+                                     self.player.image.get_width() // 5, GREEN)
+        self.circles = [Icon(image=self.red_circle), Icon(image=self.blue_circle), Icon(image=self.green_circle)]
 
         # 3 слота для игр
         self.slots = [Decor(image=self.darkie)] * 3
@@ -108,6 +116,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         level.load(game)
         level.metadata = {'music': 'Assets/Sound/Sabrepulse - Termination Shock.wav'}
         self.levels = [level] * 3
+        self.level_pointer = 0
 
         # иконка
         self.n_icons = 0
@@ -121,15 +130,17 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         if event['key'] == pygame.K_h or event['key'] == pygame.K_LEFT or event['key'] == pygame.K_a:
             if self.turning != 2:
                 self.turning += 1
+                self.level_pointer = (self.level_pointer - 1) % len(self.levels)
 
         elif event['key'] == pygame.K_l or event['key'] == pygame.K_RIGHT or event['key'] == pygame.K_d:
             if self.turning != 0:
                 self.turning -= 1
+            self.level_pointer = (self.level_pointer + 1) % len(self.levels)
 
         # перехад на уровень
         if event['key'] == pygame.K_SPACE:
             runtime = LevelRuntime()
-            runtime.load(self.levels[self.turning])
+            runtime.load(self.levels[self.level_pointer])
             runtime.play()
             game_ui = GameUI(self.canvas)
             game_ui.load_ui_context(self.views)
