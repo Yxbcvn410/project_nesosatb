@@ -5,31 +5,42 @@ from Engine.MiniGame import AbstractMiniGame
 from Engine.Media import Sprite
 from random import choice
 
+# This game is about pressing one of [w, s, a, d] Every tact has a line of letters
+# for every beat each. Dor the first half of the game we only display for every moment only
+# those letters that relate to this musical moment or earlier one
+# and then with all letters displayed we check if player prints them
+
 img_dir = path.join(path.dirname(__file__), '../Assets/Artwork/img')
 bar_width = 80
 beats_number = 4
+characters = ('w', 's', 'a', 'd')
 
 
 class LetaMiniGame(AbstractMiniGame):
     def __init__(self, life_time, letters=None):
         super().__init__(life_time)
         self.letters = letters
+
         if letters is None:
-            self.create_letters(life_time)
+            self.letters = self.create_letters(life_time)
         self.len_letters = len(self.letters)
 
-        # whether recieved data is correct for game logic and fixing it
+        # whether received data is correct for game logic and fixing it
         if len(self.letters) > (life_time - 1) // 2:
             self.letters = self.letters[:(life_time - 1) // 2]
+            self.len_letters = len(self.letters)
+        elif self.len_letters < (life_time - 1) // 2:
+            self.letters.append(self.create_letters((life_time - 1) // 2 - self.len_letters))
             self.len_letters = len(self.letters)
         for i in range(self.len_letters):
             if len(self.letters[i]) > beats_number:
                 self.letters[i] = self.letters[i][:beats_number]
             elif len(self.letters[i]) < beats_number:
                 for j in range(beats_number - len(self.letters[i])):
-                    self.letters[i].append(choice(['w', 's', 'a', 'd']))
+                    self.letters[i].append(choice(characters))
 
         self.counter = 0
+        self.letter_counter = 0
         self.background = Sprite(pygame.image.load(path.join(img_dir, 'orange.jpg')).convert())
         self.height, self.width = 0, 0
         self.got_or_not = [[0] * beats_number for i in range(self.len_letters)]
@@ -38,6 +49,8 @@ class LetaMiniGame(AbstractMiniGame):
     def update(self, time: dict):
         if time['bars'] > self.counter:
             self.counter += 1
+        if time['beats'] > self.letter_counter or time['beats'] == 0:
+            self.letter_counter = time['beats']
 
         delta_health = 0
         delta_score = 0
@@ -100,7 +113,7 @@ class LetaMiniGame(AbstractMiniGame):
     def handle(self, event):
         delta_score = 0
         delta_health = 0
-        if self.counter > self.len_letters and event['key']['unicode'] in ('w', 's', 'a', 'd') \
+        if self.counter > self.len_letters and event['key']['unicode'] in characters \
                 and math.fabs(event['time']['delta']) < 0.2:
             bars = (event['time']['bars'] - 1) % self.len_letters
             beats = event['time']['beats']
@@ -126,16 +139,23 @@ class LetaMiniGame(AbstractMiniGame):
         font = pygame.font.Font('Assets/Fonts/Patapon.ttf', self.font_size)
 
         for i in range(counter):
-            for j in range(len(self.letters[i])):
+            # last line only already beated letters if it's first half
+            if i == counter - 1 and self.counter <= self.len_letters:
+                local_counter = self.letter_counter + 1
+            else:
+                local_counter = beats_number
+
+            for j in range(local_counter):
                 pause_text = font.render(self.letters[i][j], 1, (250, 250, 250))
                 canvas.blit(pause_text, pause_text.get_rect(
                     center=[self.width // 2 + (j - (len(self.letters[i]) - 1) / 2) * self.font_size,
                             bar_width + (i + 1) * (self.height - 2 * bar_width) / (self.len_letters + 1)]))
 
     def create_letters(self, life_time):
-        self.letters = []
+        letters = []
         for i in range((life_time - 1) // 2):
             line = []
             for j in range(beats_number):
-                line.append(choice(['w', 's', 'd', 'a']))
-            self.letters.append(line)
+                line.append(choice(characters))
+            letters.append(line)
+        return letters

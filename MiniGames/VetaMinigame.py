@@ -5,6 +5,11 @@ from Engine.MiniGame import AbstractMiniGame
 from Engine.Media import Sprite
 from random import randint as rnd
 
+# kinda of flappy bird
+# with gaussianinan distribution for holes where bird loses health but the game continues
+# movement can be down or up with those or also w, s characters
+# how big velocity you get after click is determined with how near the beat the event it was
+
 img_dir = path.join(path.dirname(__file__), '../Assets/Artwork/img')
 speed = 250  # pixels per delta time
 
@@ -101,8 +106,8 @@ class Background:
         self.length = self.sprites[0].image.get_size()[0]
         self.height = background.get_height()
 
-    def change_dx(self, time):
-        self.dx = speed * time
+    def change_dx(self, time, bk_speed):
+        self.dx = bk_speed * time
         if self.dx >= self.length:
             self.dx %= self.length
 
@@ -127,7 +132,8 @@ class Background:
 
 
 class VetaMiniGame(AbstractMiniGame):
-    def __init__(self, life_time):
+    def __init__(self, life_time, set_speed=None):
+        # set_speed should be scaling, not absolute parameter
         super().__init__(life_time)
         self.time = 0
         self.width, self.height = 1080, 720
@@ -135,6 +141,10 @@ class VetaMiniGame(AbstractMiniGame):
         self.bird = Bird()
         self.bk = None
         self.hole = None
+        if not set_speed:
+            self.speed = speed + rnd(- speed//5, speed//5)
+        else:
+            self.speed = set_speed * speed
 
     def update(self, time: dict):
         # kinda of gravitation for bird
@@ -150,7 +160,7 @@ class VetaMiniGame(AbstractMiniGame):
         self.time = math.fabs(4 * time['bars'] + time['beats'] + time['delta'])
         d_time = self.time - d_time
         if self.bk:
-            self.bk.change_dx(self.time)
+            self.bk.change_dx(self.time, self.speed)
 
         # hole managing
         if self.hole and self.hole.should_be_destroyed:
@@ -158,7 +168,7 @@ class VetaMiniGame(AbstractMiniGame):
                              rnd(0, 1))
             self.hole.dx = 0
         elif self.hole:
-            self.hole.dx += speed * d_time
+            self.hole.dx += self.speed * d_time
 
         delta_health = 0
         # checking whether inside a Gaussian distribution
