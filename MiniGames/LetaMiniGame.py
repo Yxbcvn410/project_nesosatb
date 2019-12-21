@@ -4,6 +4,7 @@ import math
 from Engine.MiniGame import AbstractMiniGame
 from Engine.Media import Sprite
 from random import choice
+from random import random as rnd
 
 # This game is about pressing one of [w, s, a, d] Every tact has a line of letters
 # for every beat each. Dor the first half of the game we only display for every moment only
@@ -117,7 +118,6 @@ class LetaMiniGame(AbstractMiniGame):
                 and math.fabs(event['time']['delta']) < 0.2:
             bars = (event['time']['bars'] - 1) % self.len_letters
             beats = event['time']['beats']
-
             # new press on already pressed correctly letter also counts
             if event['key']['unicode'] == self.letters[bars][beats]:
                 if self.got_or_not[bars][beats] == -1:
@@ -133,6 +133,9 @@ class LetaMiniGame(AbstractMiniGame):
                 self.got_or_not[bars][beats] = -1
 
         return {'delta_health': delta_health, 'delta_score': delta_score}
+
+    def reset(self):
+        self.__init__(rnd(3, 9))
 
     def write_letters(self, canvas, counter):
 

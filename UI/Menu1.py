@@ -61,7 +61,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         # уровни
         level = Level(4, 120, None)
         game = MiniGameWrapper()
-        game.append_mini_game(LetaMiniGame(5))
+        game.append_mini_game(LetaMiniGame(7))
         game.append_mini_game(VetaMiniGame(42, 2))
         level.load(game)
         self.levels = [level] * 3
