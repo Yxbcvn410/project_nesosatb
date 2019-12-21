@@ -10,6 +10,7 @@ from Engine.Media import Sprite
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.mixer.init()
 pygame.init()
+pygame.display.set_icon(pygame.image.load('Assets\Artwork\cat_blow.png'))
 
 canvas = pygame.display.set_mode([0, 0], pygame.FULLSCREEN)
 img = pygame.image.load('Assets/Artwork/exp_1.png')
