@@ -11,6 +11,9 @@ from Engine.Media import Sprite
 LEMON = (255, 248, 176)
 ORANGE = (240, 184, 0)
 DARK = (0, 0, 0, 0.9*255)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+GREEN = (0, 255, 0)
 
 
 class PlayerObject(pygame.sprite.Sprite):
@@ -51,15 +54,24 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
                             (int(0.5 * self.WIDTH), self.HEIGHT // 4),
                             (int(0.8 * self.WIDTH), self.HEIGHT // 4)]
 
+        # пустые иконки
+        self.red_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
+        self.blue_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
+        self.green_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
+
+
         # изображения
         self.empties = pygame.Surface((0, 0), pygame.SRCALPHA)
         self.darkie = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
+        # пятно света
         self.light_stain = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
         pygame.gfxdraw.filled_circle(self.light_stain,
                                      self.WIDTH // 2, self.HEIGHT // 4,
                                      self.WIDTH // 10, ORANGE)
         pygame.gfxdraw.filled_circle(self.light_stain, self.WIDTH // 2, self.HEIGHT // 4,
                                      int(0.95 * self.WIDTH // 10), LEMON)
+
+        # иконка заглушки
         self.stupid = pygame.image.load("Assets/Artwork/dumb.png").convert_alpha(self.canvas)
         self.stupid = pygame.transform.scale(self.stupid, (self.WIDTH // 6, self.HEIGHT // 6))
         
@@ -93,9 +105,6 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.dumb = Icon(image=self.stupid)
         self.dumb.rect.center = (self.WIDTH // 2, self.HEIGHT // 4)
         self.game_list = [self.dumb] * 3
-        self.n_icons = 0
-        self.icon_group = pygame.sprite.Group()
-        self.icon_group.add(*self.game_list)
 
         # уровни
         level = Level(4, 120, None, self)
@@ -104,49 +113,64 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         level.load(game)
         self.levels = [level] * 3
 
+        # иконка
+        self.n_icons = 0
+        self.counting = 0
+        self.icons = []
+
+
     def key_press(self, event):
-        if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-            exit(0)
+        # прокрутка иконок
+
+
+        # кнопки перемещения
         if event.key == pygame.K_h or event.key == pygame.K_LEFT or event.key == pygame.K_a:
-            self.turning += 1
-            self.turning = self.turning % 3
+            if self.turning != 2:
+                self.turning += 1
 
         elif event.key == pygame.K_l or event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-            self.turning -= 1
-            self.turning = self.turning % 3
+            if self.turning != 0:
+                self.turning -= 1
 
+        # перехад на уровень
         if event.key == pygame.K_SPACE:
             runtime = LevelRuntime()
             runtime.load(self.levels[self.turning])
             return GameUI(self.canvas), runtime
 
+        # вкл/выкл фонарика
         if event.key == pygame.K_p:
             self.light_on = not self.light_on
 
+        # выход
+        if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+            exit(0)
+
     def update(self):
-        #if self.light_on == True:
+        if not self.light_on:
+            self.ray.image = self.empties
+        else:
+            self.ray.image = self.light_stain
 
-
-        if self.turning == 2:
+        if self.turning == 1:
             self.player.image = self.source_light
             self.ray.rect.center = (self.WIDTH // 2, self.HEIGHT // 2)
-        elif self.turning == 0:
+        elif self.turning == 2:
             self.player.image = pygame.transform.rotate(self.source_light, 30)
             self.ray.rect.center = (int(0.2 * self.WIDTH), self.ray.image.get_height() // 2)
-        elif self.turning == 1:
+        elif self.turning == 0:
             self.player.image = pygame.transform.rotate(self.source_light, -30)
             self.ray.rect.center = (int(0.8 * self.WIDTH), self.ray.image.get_height() // 2)
 
     def draw_widgets(self):
         self.clean_canvas()
-        self.icon_group.draw(self.canvas)
         self.slots_group.draw(self.canvas)
         self.player_group.draw(self.canvas)
 
     def add_level(self, level):
         if "icon" not in level.metadata:
             level.metadata['icon'] = self.dumb.image
-
+        self.n_icons += 1
         new_icon = pygame.image.load(level.metadata['icon']).convert_alpha(self.canvas)
         self.game_list[self.n_icons].image = new_icon
         self.game_list[self.n_icons].rect = new_icon.get_rect()
