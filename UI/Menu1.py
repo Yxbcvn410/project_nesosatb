@@ -4,6 +4,7 @@ import pygame.gfxdraw
 from UI.GameUI import GameUI
 from Engine.Level import LevelRuntime, Level
 from MiniGames.StubMinigame import StubMinigame
+from MiniGames.LetaMiniGame import LetaMiniGame
 from MiniGames.VetaMinigame import VetaMiniGame
 from Engine.MiniGame import MiniGameWrapper
 from Engine.Media import Sprite
@@ -60,6 +61,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         # уровни
         level = Level(4, 120, None)
         game = MiniGameWrapper()
+        game.append_mini_game(LetaMiniGame(6, [['a', 'a'], ['b']]))
         game.append_mini_game(VetaMiniGame(42))
         level.load(game)
         self.levels = [level] * 3

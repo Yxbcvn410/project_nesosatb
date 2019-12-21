@@ -168,10 +168,8 @@ class VetaMiniGame(AbstractMiniGame):
                 if not self.hole.is_up:
                     if self.bird.y < hole_y:
                         delta_health = -5
-                        delta_score = 0
                 elif self.bird.y > self.bk.height - hole_y + 2 * self.d_height:
                     delta_health = -5
-                    delta_score = 0
 
         return {'delta_health': delta_health, 'delta_score': 0}
 
