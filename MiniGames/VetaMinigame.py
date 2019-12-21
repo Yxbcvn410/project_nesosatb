@@ -74,6 +74,7 @@ class Bird:
         self.birds = [Sprite(bird_up), Sprite(bird_down)]
         self.up_or_down_bird = 0
         self.y = 0
+        self.vy = 0
 
     def change_bird(self):
         self.up_or_down_bird += 1
@@ -137,11 +138,12 @@ class VetaMiniGame(AbstractMiniGame):
 
     def update(self, time: dict):
         # kinda of gravitation for bird
-        self.bird.y += self.height // 300
+        self.bird.y += self.height // 300 + self.bird.vy
 
         # changing birds wings every bit
         if time['beat_type'] in (1, 2):
             self.bird.change_bird()
+            self.bird.vy = 0
 
         # calculating x for background and bird pictures
         d_time = self.time
@@ -198,9 +200,9 @@ class VetaMiniGame(AbstractMiniGame):
             delta_score += 5 * event['time']['beat_type']
 
         if event['key']['key'] in (273, 119):
-            self.bird.y -= math.cos(math.pi * event['time']['delta']) * self.height // 7
+            self.bird.vy = - math.cos(math.pi * event['time']['delta']) * self.height // 50
 
         elif event['key']['key'] in (274, 115):
-            self.bird.y += math.cos(math.pi * event['time']['delta']) * self.height // 7
+            self.bird.vy = + math.cos(math.pi * event['time']['delta']) * self.height // 50
 
         return {'delta_health': 0, 'delta_score': delta_score}
