@@ -82,7 +82,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.turning = 1
 
         # луч
-        self.light_on = True
+        self.light_on = False
         self.ray = PlayerObject(image=self.light_stain)
         self.player_group.add(self.ray)
 
@@ -96,7 +96,8 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.green_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
         pygame.gfxdraw.filled_circle(self.green_circle, self.game_center[2][0], self.game_center[2][1],
                                      self.player.image.get_width() // 5, GREEN)
-        self.circles = [Icon(image=self.red_circle), Icon(image=self.blue_circle), Icon(image=self.green_circle)]
+        self.circles_group = pygame.sprite.Group()
+        self.circles_group.add(Icon(image=self.red_circle), Icon(image=self.blue_circle), Icon(image=self.green_circle))
 
         # 3 слота для игр
         self.slots = [Decor(image=self.darkie)]*3
@@ -123,7 +124,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         # иконка
         self.n_icons = 0
         self.counting = 0
-        self.icons = []
+        # self.icon = Icon(image=level.metadata['icon'])
 
 
     def key_press(self, event):
@@ -134,12 +135,12 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         if event.key == pygame.K_h or event.key == pygame.K_LEFT or event.key == pygame.K_a:
             if self.turning != 2:
                 self.turning += 1
-                self.level_pointer = (self.level_pointer - 1) % len(self.levels)
+                self.level_pointer = (self.level_pointer - 1) % (1+len(self.levels))
 
         elif event.key == pygame.K_l or event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             if self.turning != 0:
                 self.turning -= 1
-            self.level_pointer = (self.level_pointer + 1) % len(self.levels)
+            self.level_pointer = (self.level_pointer + 1) % (1+len(self.levels))
 
         # перехад на уровень
         if event.key == pygame.K_SPACE:
@@ -150,6 +151,10 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         # вкл/выкл фонарика
         if event.key == pygame.K_p:
             self.light_on = not self.light_on
+            if self.light_on:
+                self.slots[self.turning].image = self.empties
+            else:
+                self.slots[self.turning].image = self.darkie
 
         # выход
         if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
@@ -173,8 +178,10 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
 
     def draw_widgets(self):
         self.clean_canvas()
-        self.slots_group.draw(self.canvas)
+
         self.player_group.draw(self.canvas)
+        self.circles_group.draw(self.canvas)
+        self.slots_group.draw(self.canvas)
 
     def add_level(self, level):
         if "icon" not in level.metadata:
