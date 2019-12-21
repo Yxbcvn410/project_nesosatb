@@ -114,8 +114,8 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         game = MiniGameWrapper()
         game.append_mini_game(StubMinigame(4, Sprite(pygame.image.load('Assets/Artwork/exp_1.png'))))
         level.load(game)
+        self.levels = []
         level.metadata = {'music': 'Assets/Sound/Sabrepulse - Termination Shock.wav'}
-        self.levels = [level] * 3
         self.level_pointer = 0
 
         # иконка
@@ -183,4 +183,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         new_icon = pygame.image.load(level.metadata['icon']).convert_alpha(self.canvas)
         self.game_list[self.n_icons].image = new_icon
         self.game_list[self.n_icons].rect = new_icon.get_rect()
+        game = MiniGameWrapper()
+        game.append_mini_game(StubMinigame(4, Sprite(pygame.image.load('Assets/Artwork/exp_1.png'))))
+        level.load(game)
         self.levels.append(level)
