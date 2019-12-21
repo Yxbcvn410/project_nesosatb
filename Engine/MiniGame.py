@@ -56,8 +56,6 @@ class MiniGameWrapper(AbstractMiniGame):
             raise AssertionError()  # Размеры содержимых мини-игр не совпадают!
         self.__mini_games.append(mini_game)
         self.__mini_games[-1].start_time = offset + self.life_time
-        if len(self.__mini_games) == 1:
-            self.__mini_games[-1].start_time += 1
         self.active_mini_game = self.__get_nearest_future_mini_game({'bars': 0})
         self.life_time = max(self.life_time, mini_game.start_time + mini_game.life_time)
 

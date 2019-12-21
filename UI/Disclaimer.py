@@ -18,6 +18,10 @@ class Disclaimer(AbstractUI):
         super().__init__(canvas)
         self.runtime = AnimationRuntime()
         self.status = Status.TRIANGLE
+        ball_surf = pygame.Surface((150, 150))
+        pygame.draw.ellipse(ball_surf, (0, 255, 255), (0, 0, 150, 150))
+        self.ball_sprite = Sprite(ball_surf)
+        self.ball_sprite.transform(center=(400, 400), scale=2)
 
     def schedule_animations(self):
         center = tuple(a / 2 for a in self.canvas.get_size())
@@ -28,6 +32,9 @@ class Disclaimer(AbstractUI):
         times_font = pygame.font.Font('Assets/Fonts/Times New Roman.ttf', 30)
         greet_sprite = Sprite(times_font.render('From creators of lab3.1 and lab3.2', 1, (255,) * 3))
         greet_sprite.transform(center=center, opacity=0)
+        self.runtime.add_animation_by_keyframes(self.ball_sprite, {
+            1: {'scale': 0}
+        })
 
         self.runtime.add_animation_by_keyframes(pygame_logo, {
             2: {},
@@ -74,4 +81,5 @@ class Disclaimer(AbstractUI):
         if self.status == Status.TRIANGLE:
             delta = (time.time() % 0.5 - 0.25) * 2
             r = (0.5 - abs(delta)) ** 2.1 * 50 + 100
-            pygame.draw.ellipse(self.canvas, (0, 255, 255), (400 - r, 400 - r, r * 2, r * 2))
+            self.ball_sprite.transform(scale=r / 75)
+            self.ball_sprite.draw(self.canvas)

@@ -3,9 +3,7 @@ import pygame.gfxdraw
 
 from Engine.Interface import AbstractUI
 from Engine.Level import LevelRuntime, Level
-from Engine.Media import Sprite
 from Engine.MiniGame import MiniGameWrapper
-from MiniGames.StubMinigame import StubMinigame
 from MiniGames.LetaMiniGame import LetaMiniGame
 from MiniGames.VetaMinigame import VetaMiniGame
 from UI.GameUI import GameUI
@@ -79,11 +77,13 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.icon_group.add(*self.game_list)
 
         # уровни
-        level = Level(120)
+        level = Level(126, empty_bars=2)
         game = MiniGameWrapper()
+        game.append_mini_game(LetaMiniGame(3, [['a', 'a'], ['b']]))
         game.append_mini_game(LetaMiniGame(3, [['a', 'a'], ['b']]))
         game.append_mini_game(VetaMiniGame(42))
         level.load(game)
+        level.metadata = {'music': 'Assets/Sound/Sabrepulse - Termination Shock.wav'}
         self.levels = [level] * 3
 
     def key_press(self, event):
