@@ -1,9 +1,11 @@
-import pygame
-from os import path
 import math
-from Engine.MiniGame import AbstractMiniGame
-from Engine.Media import Sprite
+from os import path
 from random import choice
+
+import pygame
+
+from Engine.Media import Sprite
+from Engine.MiniGame import AbstractMiniGame
 
 # This game is about pressing one of [w, s, a, d] Every tact has a line of letters
 # for every beat each. Dor the first half of the game we only display for every moment only
@@ -17,8 +19,11 @@ characters = ('w', 's', 'a', 'd')
 
 
 class LetaMiniGame(AbstractMiniGame):
+    def configure(self, config_json):
+        pass  # TODO
+
     def reset(self):
-        pass
+        pass  # TODO
 
     def __init__(self, life_time, letters=None):
         super().__init__(life_time)

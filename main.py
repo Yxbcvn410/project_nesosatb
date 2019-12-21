@@ -1,8 +1,5 @@
 import pygame
 
-from Engine.Level import Level
-from Engine.MiniGame import MiniGameWrapper
-from MiniGames.LetaMiniGame import LetaMiniGame
 from UI.Disclaimer import Disclaimer
 from UI.Menu1 import Menu
 
@@ -20,15 +17,6 @@ pygame.mouse.set_cursor((8, 8), (0, 0), (0,) * 8, (0,) * 8)
 clock = pygame.time.Clock()
 menu = Menu(canvas)
 
-level1 = Level(126, empty_bars=2)
-level1.metadata = {'music': 'Assets/Sound/Sabrepulse - Termination Shock.wav'}
-
-menu.add_level(level1)
-game = MiniGameWrapper()
-game.append_mini_game(LetaMiniGame(2, [['a', 'd'], ['w', 'd']]))
-game.append_mini_game(LetaMiniGame(2, [['a', 'd'], ['w', 'd']]))
-game.append_mini_game(LetaMiniGame(2, [['a', 'd'], ['w', 'd']]))
-level1.load(game)
 ui_context = {'menu': menu, 'disclaimer': Disclaimer(canvas)}
 
 graphical_ui = ui_context['disclaimer']

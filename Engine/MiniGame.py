@@ -31,12 +31,35 @@ class AbstractMiniGame(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def configure(self, config_json):
+        """Настроить мини-игру из JSON-файла"""
+        pass
+
+    @abc.abstractmethod
     def reset(self):
         """Сбросить данные уровня, чтобы начать игру сначала"""
         pass
 
 
 class MiniGameWrapper(AbstractMiniGame):
+    def configure(self, config_json, mini_game_constructors=None):
+        """Обёртка конфигурируется списком словарей следующего формата:
+        'type': класс мини-игры
+        'life_time': время существования
+        'offset': сдвиг относительно предыдущей мини-игры (опционально)
+        'repeat': сколько раз повторить конфиг (опционально)
+        'config': собственно конфиг (опционально)
+        """
+        self.__init__()
+        if mini_game_constructors is None:
+            mini_game_constructors = {}
+        for mg_config in config_json:
+            for i in range(mg_config.get('repeat', 1)):
+                mini_game = mini_game_constructors[mg_config['type']](mg_config['life_time'])
+                config = mg_config.get('config', {})
+                mini_game.configure(config)
+                self.append_mini_game(mini_game, offset=mg_config.get('offset', 0))
+
     def __init__(self):
         super().__init__(0)
         self.__mini_games = []

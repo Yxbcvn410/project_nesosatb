@@ -41,7 +41,7 @@ class AnimationRuntime:
     def __init__(self):
         self.animations = []
 
-    def add_animation(self, sprite, animation_time, final_state: dict, time_offset=0.):
+    def add_transition(self, sprite, animation_time, final_state: dict, time_offset=0.):
         if 'center' in final_state:
             center = final_state.pop('center')
             final_state.update({'x': center[0], 'y': center[1]})
@@ -57,7 +57,7 @@ class AnimationRuntime:
             keyframes.pop(0)
         processed_time = 0
         for key in keyframes:
-            self.add_animation(sprite, key - processed_time, keyframes[key], processed_time)
+            self.add_transition(sprite, key - processed_time, keyframes[key], processed_time)
             processed_time = key
 
     def update_all(self, surface):

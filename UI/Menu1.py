@@ -5,7 +5,9 @@ from Engine.Interface import AbstractUI
 from Engine.Level import LevelRuntime, Level
 from Engine.Media import Sprite
 from Engine.MiniGame import MiniGameWrapper
+from MiniGames.LetaMiniGame import LetaMiniGame
 from MiniGames.StubMinigame import StubMinigame
+from MiniGames.VetaMinigame import VetaMiniGame
 from UI.GameUI import GameUI
 
 # colors
@@ -40,6 +42,10 @@ class Decor(pygame.sprite.Sprite):
 
 
 class Menu(AbstractUI, pygame.sprite.Sprite):
+
+    def load_views(self, views: dict):
+        pass
+
     def __init__(self, canvas):
         # working with canvas
         super().__init__(canvas)
@@ -65,12 +71,11 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         # иконка заглушки
         self.stupid = pygame.image.load("Assets/Artwork/dumb.png").convert_alpha(self.canvas)
         self.stupid = pygame.transform.scale(self.stupid, (self.WIDTH // 6, self.HEIGHT // 6))
-        
-        
+
         # добавление фонарика
         self.source_light = pygame.image.load("Assets/Artwork/flashlight_orange.png").convert_alpha(self.canvas)
         self.source_light = pygame.transform.scale(self.source_light,
-                                              (self.WIDTH // 4, self.HEIGHT // 4))
+                                                   (self.WIDTH // 4, self.HEIGHT // 4))
         self.player = PlayerObject(image=self.source_light)
         self.player.rect.center = (self.WIDTH // 2,
                                    self.HEIGHT - self.player.image.get_height() // 2)
@@ -79,7 +84,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.turning = 1
 
         # луч
-        self.light_on = False
+        self.light_on = True
         self.ray = PlayerObject(image=self.light_stain)
         self.player_group.add(self.ray)
 
@@ -93,8 +98,7 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         self.green_circle = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
         pygame.gfxdraw.filled_circle(self.green_circle, self.game_center[2][0], self.game_center[2][1],
                                      self.player.image.get_width() // 5, GREEN)
-        self.circles_group = pygame.sprite.Group()
-        self.circles_group.add(Icon(image=self.red_circle), Icon(image=self.blue_circle), Icon(image=self.green_circle))
+        self.circles = [Icon(image=self.red_circle), Icon(image=self.blue_circle), Icon(image=self.green_circle)]
 
         # 3 слота для игр
         self.slots = [Decor(image=self.darkie)] * 3
@@ -115,14 +119,25 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         game = MiniGameWrapper()
         game.append_mini_game(StubMinigame(4, Sprite(pygame.image.load('Assets/Artwork/exp_1.png'))))
         level.load(game)
-        self.levels = []
-        level.metadata = {'music': 'Assets/Sound/Sabrepulse - Termination Shock.wav'}
+
+        level1 = Level(126, metadata={'music': 'Assets/Sound/Sabrepulse - Termination Shock.wav', 'empty_bars': 2})
+        game = MiniGameWrapper()
+        for i in range(10):
+            game.append_mini_game(LetaMiniGame(4, [['a', 'd'], ['w', 'd']]))
+        level1.load(game)
+
+        level2 = Level(126, metadata={'music': 'Assets/Sound/Sabrepulse - Termination Shock.wav', 'empty_bars': 2})
+        game2 = MiniGameWrapper()
+        game2.append_mini_game(VetaMiniGame(64))
+        level2.load(game2)
+
+        self.levels = [level, level1, level2]
         self.level_pointer = 0
 
         # иконка
         self.n_icons = 0
         self.counting = 0
-        # self.icon = Icon(image=level.metadata['icon'])
+        self.icons = []
 
     def key_press(self, event):
         # прокрутка иконок
@@ -131,30 +146,26 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         if event['key'] == pygame.K_h or event['key'] == pygame.K_LEFT or event['key'] == pygame.K_a:
             if self.turning != 2:
                 self.turning += 1
-                self.level_pointer = (self.level_pointer - 1) % (1+len(self.levels))
+                self.level_pointer = (self.level_pointer - 1) % len(self.levels)
 
         elif event['key'] == pygame.K_l or event['key'] == pygame.K_RIGHT or event['key'] == pygame.K_d:
             if self.turning != 0:
                 self.turning -= 1
-            self.level_pointer = (self.level_pointer + 1) % (1+len(self.levels))
+            self.level_pointer = (self.level_pointer + 1) % len(self.levels)
 
         # перехад на уровень
         if event['key'] == pygame.K_SPACE:
             runtime = LevelRuntime()
+            self.levels[self.level_pointer].reset()
             runtime.load(self.levels[self.level_pointer])
+            gui = GameUI(self.canvas)
+            gui.set_runtime(runtime)
             runtime.play()
-            game_ui = GameUI(self.canvas)
-            game_ui.load_ui_context(self.views)
-            game_ui.set_runtime(runtime)
-            return game_ui
+            return gui
 
         # вкл/выкл фонарика
         if event['key'] == pygame.K_p:
             self.light_on = not self.light_on
-            if self.light_on:
-                self.slots[self.turning].image = self.empties
-            else:
-                self.slots[self.turning].image = self.darkie
 
         # выход
         if event['key'] == pygame.K_q or event['key'] == pygame.K_ESCAPE:
@@ -178,10 +189,8 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
 
     def draw_widgets(self):
         self.clean_canvas()
-
-        self.player_group.draw(self.canvas)
-        self.circles_group.draw(self.canvas)
         self.slots_group.draw(self.canvas)
+        self.player_group.draw(self.canvas)
 
     def add_level(self, level):
         if "icon" not in level.metadata:
@@ -190,7 +199,4 @@ class Menu(AbstractUI, pygame.sprite.Sprite):
         new_icon = pygame.image.load(level.metadata['icon']).convert_alpha(self.canvas)
         self.game_list[self.n_icons].image = new_icon
         self.game_list[self.n_icons].rect = new_icon.get_rect()
-        game = MiniGameWrapper()
-        game.append_mini_game(StubMinigame(4, Sprite(pygame.image.load('Assets/Artwork/exp_1.png'))))
-        level.load(game)
         self.levels.append(level)

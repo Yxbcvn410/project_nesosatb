@@ -1,9 +1,11 @@
-import pygame
-from os import path
 import math
-from Engine.MiniGame import AbstractMiniGame
-from Engine.Media import Sprite
+from os import path
 from random import randint as rnd
+
+import pygame
+
+from Engine.Media import Sprite
+from Engine.MiniGame import AbstractMiniGame
 
 # kinda of flappy bird
 # with gaussianinan distribution for holes where bird loses health but the game continues
@@ -132,6 +134,9 @@ class Background:
 
 
 class VetaMiniGame(AbstractMiniGame):
+    def configure(self, config_json):
+        pass  # TODO
+
     def reset(self):
         pass  # TODO
 

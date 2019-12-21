@@ -46,8 +46,8 @@ class SettingsPopup(AbstractUI):
 
         font = pygame.font.Font('Assets/Fonts/Patapon.ttf', 40)
         over_text = font.render('Volume: {}'.format(self.vol), 1, WHITE)
-        l_text = font.render('<L', 1, WHITE)
-        r_text = font.render('R>', 1, WHITE)
+        l_text = font.render('<-', 1, WHITE)
+        r_text = font.render('->', 1, WHITE)
         c = l_text.get_rect(center=center)
         self.canvas.blit(over_text, over_text.get_rect(center=center))
         self.canvas.blit(l_text, (MARGIN, c[1]))
