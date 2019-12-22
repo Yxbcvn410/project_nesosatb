@@ -54,10 +54,14 @@ class MiniGameWrapper(AbstractMiniGame):
         if mini_game_constructors is None:
             mini_game_constructors = {}
         for mg_config in config_json:
+            config = mg_config.get('config', {})
             for i in range(mg_config.get('repeat', 1)):
-                mini_game = mini_game_constructors[mg_config['type']](mg_config['life_time'])
-                config = mg_config.get('config', {})
-                mini_game.configure(config)
+                if mg_config['type'] == 'Wrapper':
+                    mini_game = MiniGameWrapper()
+                    mini_game.configure(config, mini_game_constructors)
+                else:
+                    mini_game = mini_game_constructors[mg_config['type']](mg_config['life_time'])
+                    mini_game.configure(config)
                 self.append_mini_game(mini_game, offset=mg_config.get('offset', 0))
 
     def __init__(self):

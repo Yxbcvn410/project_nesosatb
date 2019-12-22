@@ -55,7 +55,7 @@ class MvpMenu(AbstractUI):
         pass
 
     def draw_widgets(self):
-        font = pygame.font.Font("Assets/Fonts/Times New Roman.ttf", FONT_SZ)
+        font = pygame.font.Font("Assets/Fonts/Patapon.ttf", FONT_SZ)
         size = self.canvas.get_size()
         for i in range(self.lines_no):
             if i + self.first_in_view >= len(self.levels):

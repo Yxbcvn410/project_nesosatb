@@ -6,7 +6,9 @@ from Engine.Media import Sprite
 
 class StubMinigame(Engine.MiniGame.AbstractMiniGame):
     def configure(self, config_json):
-        pass  # TODO?
+        if 'sprite' in config_json:
+            self.spr = Sprite(config_json['sprite'])
+            self.spr.transform(center=(400, 300))
 
     def reset(self):
         pass
@@ -28,8 +30,6 @@ class StubMinigame(Engine.MiniGame.AbstractMiniGame):
         return {'delta_health': 0, 'delta_score': 0}
 
     def draw(self, time: dict, canvas):
-        if time['beat_type'] in (1, 2):
-            self.bp.play()
         self.spr.draw(canvas)
 
     def handle(self, event):

@@ -7,9 +7,25 @@
   },
   "game": [
     {
-      "type": "StubMiniGame",
-      "life_time": 1,
-      "repeat": 20
+      "type": "LetterMiniGame",
+      "life_time": 4,
+      "repeat": 4,
+      "config": {
+        "letters": [
+          [
+            "w",
+            "",
+            "s",
+            "d"
+          ],
+          [
+            "a",
+            "w",
+            "w",
+            ""
+          ]
+        ]
+      }
     },
     {
       "type": "VetaMiniGame",
