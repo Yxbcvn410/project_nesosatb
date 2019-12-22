@@ -1,0 +1,15 @@
+{
+  "bpm": 126,
+  "metadata": {
+    "music": "Assets/Sound/Sabrepulse - Termination Shock.wav",
+    "empty_bars": 0,
+    "name": "Hill"
+  },
+  "game": [
+    {
+      "type": "HillMiniGame",
+      "life_time": 12,
+      "config": {"background" :  "background0.png", "hill" :  "hill.png"}
+    }
+  ]
+}

@@ -12,34 +12,36 @@ from Engine.MiniGame import AbstractMiniGame
 # those letters that relate to this musical moment or earlier one
 # and then with all letters displayed we check if player prints them
 
-img_dir = path.join(path.dirname(__file__), '../Assets/Artwork/img')
+img_dir = path.join(path.dirname(__file__), '../Assets/Artwork/img/LetaMiniGame/')
 bar_width = 80
 beats_number = 4
 characters = ('w', 's', 'a', 'd')
 
 
 class LetaMiniGame(AbstractMiniGame):
-    def configure(self, config_json):
-        pass  # TODO
-
     def reset(self):
-        pass  # TODO
+        pass
 
-    def __init__(self, life_time, letters=None):
-        super().__init__(life_time)
-        self.letters = letters
+    def configure(self, config_json):
+        self.letters = config_json['letters']
 
-        if letters is None:
-            self.letters = self.create_letters(life_time)
+        if self.letters is None:
+            self.letters = self.create_letters(self.life_time)
         self.len_letters = len(self.letters)
 
         # whether received data is correct for game logic and fixing it
-        if len(self.letters) > (life_time - 1) // 2:
-            self.letters = self.letters[:(life_time - 1) // 2]
+
+        # how many lines
+        if self.len_letters > (self.life_time - 1) // 2:
+            self.letters = self.letters[:(self.life_time - 1) // 2]
             self.len_letters = len(self.letters)
-        elif self.len_letters < (life_time - 1) // 2:
-            self.letters.append(self.create_letters((life_time - 1) // 2 - self.len_letters))
+        elif self.len_letters < (self.life_time - 1) // 2:
+            additional_lines = self.create_letters((self.life_time - 1) // 2 - self.len_letters)
+            for line in additional_lines:
+                self.letters.append(line)
             self.len_letters = len(self.letters)
+
+        # how many letters in every line
         for i in range(self.len_letters):
             if len(self.letters[i]) > beats_number:
                 self.letters[i] = self.letters[i][:beats_number]
@@ -47,24 +49,32 @@ class LetaMiniGame(AbstractMiniGame):
                 for j in range(beats_number - len(self.letters[i])):
                     self.letters[i].append(choice(characters))
 
+        self.got_or_not = [[0] * beats_number for i in range(self.len_letters)]
+        self.background = Sprite(pygame.image.load(path.join(img_dir, config_json['background'])).convert())
+
+    def __init__(self, life_time):
+        super().__init__(life_time)
+        self.letters = None
+        self.len_letters = 0
         self.counter = 0
         self.letter_counter = 0
-        self.background = Sprite(pygame.image.load(path.join(img_dir, 'orange.jpg')).convert())
+        self.background = None
         self.height, self.width = 0, 0
-        self.got_or_not = [[0] * beats_number for i in range(self.len_letters)]
+        self.got_or_not = []
         self.font_size = 0
 
     def update(self, time: dict):
-        if time['bars'] > self.counter:
+        if time['bars'] > self.counter and time['beat_type'] in (1, 2):
             self.counter += 1
-        if time['beats'] > self.letter_counter or time['beats'] == 0:
+        if (time['beats'] > self.letter_counter or time['beats'] == 0) and time['beat_type'] in (1, 2):
             self.letter_counter = time['beats']
 
         delta_health = 0
         delta_score = 0
+
         if time['beat_type'] in (1, 2) and self.len_letters < self.counter and \
-                self.got_or_not[(time['bars'] - 1) % self.len_letters][time['beats']] == 0:
-            self.got_or_not[(time['bars'] - 1) % self.len_letters][time['beats']] = -1
+                self.got_or_not[(self.counter - 1) % self.len_letters][self.letter_counter] == 0:
+            self.got_or_not[(self.counter - 1) % self.len_letters][self.letter_counter] = -1
             delta_health = -5
 
         return {'delta_health': delta_health, 'delta_score': delta_score}
@@ -159,9 +169,9 @@ class LetaMiniGame(AbstractMiniGame):
                     center=[self.width // 2 + (j - (len(self.letters[i]) - 1) / 2) * self.font_size,
                             bar_width + (i + 1) * (self.height - 2 * bar_width) / (self.len_letters + 1)]))
 
-    def create_letters(self, life_time):
+    def create_letters(self, line_number):
         letters = []
-        for i in range((life_time - 1) // 2):
+        for i in range(line_number):
             line = []
             for j in range(beats_number):
                 line.append(choice(characters))

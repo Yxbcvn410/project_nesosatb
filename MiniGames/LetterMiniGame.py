@@ -55,7 +55,7 @@ class LetterMiniGame(AbstractMiniGame):
         if letters is None:
             letters = [['w', 'a', 's', 'd']]
         self.cool_down = 0
-        self.bg = Sprite('Assets/Artwork/img/orange.jpg')
+        self.bg = Sprite('Assets/Artwork/img/LetaMiniGame/orange.jpg')
         self.letters = []
         self.letter_sprites = []
         self.load_letters(letters)

@@ -12,7 +12,7 @@ from Engine.MiniGame import AbstractMiniGame
 # movement can be down or up with those or also w, s characters
 # how big velocity you get after click is determined with how near the beat the event it was
 
-img_dir = path.join(path.dirname(__file__), '../Assets/Artwork/img')
+img_dir = path.join(path.dirname(__file__), '../Assets/Artwork/img/VetaMiniGame/')
 speed = 250  # pixels per delta time
 
 

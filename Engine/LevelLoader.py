@@ -7,12 +7,14 @@ from MiniGames.LetaMiniGame import LetaMiniGame
 from MiniGames.LetterMiniGame import LetterMiniGame
 from MiniGames.StubMinigame import StubMinigame
 from MiniGames.VetaMinigame import VetaMiniGame
+from MiniGames.HillMiniGame import HillMinigame
 
 ACCESSIBLE_CONSTRUCTORS = {
     'StubMiniGame': lambda life_time: StubMinigame(life_time),
     'LetaMiniGame': lambda life_time: LetaMiniGame(life_time),
     'VetaMiniGame': lambda life_time: VetaMiniGame(life_time),
-    'LetterMiniGame': lambda life_time: LetterMiniGame(life_time)
+    'LetterMiniGame': lambda life_time: LetterMiniGame(life_time),
+    'HillMiniGame': lambda life_time: HillMinigame(life_time)
 }
 
 
