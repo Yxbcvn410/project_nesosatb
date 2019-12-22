@@ -1,9 +1,11 @@
-import pygame
-from os import path
 import math
-from Engine.MiniGame import AbstractMiniGame
-from Engine.Media import Sprite
+from os import path
 from random import randint as rnd
+
+import pygame
+
+from Engine.Media import Sprite
+from Engine.MiniGame import AbstractMiniGame
 
 # kinda of flappy bird
 # with gaussianinan distribution for holes where bird loses health but the game continues
@@ -132,10 +134,14 @@ class Background:
 
 
 class VetaMiniGame(AbstractMiniGame):
+    def configure(self, config_json):
+        pass  # TODO
+
     def reset(self):
         pass  # TODO
 
-    def __init__(self, life_time, set_speed=None)
+    def __init__(self, life_time, set_speed=None):
+        # set_speed should be scaling, not absolute parameter
         super().__init__(life_time)
         # TODO Если твоя игра расчитана на обределённый размер такта, необходимо бросить исключение
         # По умолчанию размер такта равен 4, но может произойти и иное

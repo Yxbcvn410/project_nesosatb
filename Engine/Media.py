@@ -1,22 +1,6 @@
 import pygame
 
 
-class MusicPlayer:
-    """Возможно, этот класс бесполезен. Выпилить его надо, наверное..."""
-
-    def __init__(self):
-        self.music = None  # TODO
-
-    def load(self, file):
-        print('Loaded music from {}'.format(file))  # TODO
-
-    def play(self):
-        print('Playback started')  # TODO
-
-    def pause(self):
-        print('Playback paused')  # TODO
-
-
 class Sprite:
     def __init__(self, image):
         if type(image) == str:
@@ -24,7 +8,7 @@ class Sprite:
         elif type(image) == pygame.Surface:
             self.image = image
         else:
-            raise TypeError  # Image type not supported
+            raise TypeError  # Тип изображения не поддерживается!
 
         self.center = [0, 0]
         self.turn = 0
@@ -74,9 +58,6 @@ class Sprite:
             'opacity': self.opacity
         }
 
-    def set_opacity(self, opacity):
-        self.opacity = opacity
-
     def __blit_alpha__(self, target, source, location, opacity):
         self.temp = pygame.Surface((source.get_width(), source.get_height())).convert()
         self.temp.blit(target, tuple(-x for x in location))
@@ -93,3 +74,19 @@ class Sprite:
             self.__blit_alpha__(surface, transformed_instance, left_upper_angle, self.opacity)
         else:
             surface.blit(transformed_instance, left_upper_angle)
+
+
+class AnimationSprite(Sprite):
+    def __init__(self, images: dict):
+        if len(images) == 0:
+            raise AssertionError()  # Пустой список спрайтов
+        super().__init__(list(images.values())[0])
+        self.all_images = images
+        for image_key in self.all_images:
+            if type(self.all_images[image_key]) == str:
+                self.all_images[image_key] = pygame.image.load(self.all_images[image_key])
+            if not type(self.all_images[image_key]) == pygame.Surface:
+                raise TypeError()  # Тип изображения не поддерживается!
+
+    def set_active_sprite(self, key):
+        self.image = self.all_images[key]

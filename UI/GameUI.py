@@ -46,8 +46,8 @@ class SettingsPopup(AbstractUI):
 
         font = pygame.font.Font('Assets/Fonts/Patapon.ttf', 40)
         over_text = font.render('Volume: {}'.format(self.vol), 1, WHITE)
-        l_text = font.render('<L', 1, WHITE)
-        r_text = font.render('R>', 1, WHITE)
+        l_text = font.render('<-', 1, WHITE)
+        r_text = font.render('->', 1, WHITE)
         c = l_text.get_rect(center=center)
         self.canvas.blit(over_text, over_text.get_rect(center=center))
         self.canvas.blit(l_text, (MARGIN, c[1]))
@@ -124,9 +124,11 @@ class GameUI(AbstractUI):
         self.canvas.blit(l_sc_text, (0, 40))
 
         # Индикатор здоровья в правом верхнем углу
+        pygame.draw.ellipse(self.canvas, BLACK, [size[0] - MARGIN - RADIUS * 2, MARGIN, RADIUS * 2, RADIUS * 2])
+
         if self.info['over']:  # Полоса здоровья становится белым кругом в конце игры
             pygame.draw.ellipse(self.canvas, WHITE, [size[0] - MARGIN - RADIUS * 2, MARGIN, RADIUS * 2, RADIUS * 2], 5)
-        else:
+        else:  # А пока она красная
             pygame.draw.arc(self.canvas, RED, [size[0] - MARGIN - RADIUS * 2, MARGIN, RADIUS * 2, RADIUS * 2], pi / 2,
                             pi / 2 + 2 * pi * self.info['stats']['health_info']['health'] /
                             self.info['stats']['health_info']['max'], 5)

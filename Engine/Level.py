@@ -4,15 +4,16 @@ import pygame
 
 
 class Level:
-    def __init__(self, bpm, health_max=100, metadata=None, empty_bars=1):
+    def __init__(self, bpm, health_max=100, metadata={}):
         self.bpm = bpm
         self.game = None
         self.health_max = health_max
         self.health = health_max
         self.score = 0
         self.progress = 0.
-        self.metadata = metadata
-        self.empty_bars = empty_bars
+        self.__metadata = metadata
+        if 'empty_bars' not in self.__metadata:
+            self.__metadata.update({'empty_bars': 1})
 
     def load(self, wrapper):
         self.game = wrapper
@@ -23,15 +24,17 @@ class Level:
     def update(self, time_dict: dict):
         """Обновить текущую мини-игру
         Возврат True если игра закончена, иначе False"""
-        time_dict['bars'] -= self.empty_bars
+        time_dict['bars'] -= self.__metadata['empty_bars']
         if time_dict['bars'] < 0:
-            self.progress = (self.empty_bars + time_dict['bars'] + (time_dict['beats'] + time_dict['delta'] + 0.5) /
-                             time_dict['beat_size']) / (self.game.life_time + self.empty_bars)
+            self.progress = (self.__metadata['empty_bars'] + time_dict['bars'] + (
+                    time_dict['beats'] + time_dict['delta'] + 0.5) /
+                             time_dict['beat_size']) / (self.game.life_time + self.__metadata['empty_bars'])
             return False
         is_level_over = self.game.is_over(time_dict) or self.health <= 0
         if not is_level_over:
-            self.progress = (self.empty_bars + time_dict['bars'] + (time_dict['beats'] + time_dict['delta'] + 0.5) /
-                             time_dict['beat_size']) / (self.game.life_time + self.empty_bars)
+            self.progress = (self.__metadata['empty_bars'] + time_dict['bars'] + (
+                    time_dict['beats'] + time_dict['delta'] + 0.5) /
+                             time_dict['beat_size']) / (self.game.life_time + self.__metadata['empty_bars'])
             game_states_change = self.game.update(time_dict)
             self.score += game_states_change['delta_score']
             self.health += game_states_change['delta_health']
@@ -44,14 +47,14 @@ class Level:
         return is_level_over
 
     def draw(self, canvas, time_dict: dict):
-        time_dict['bars'] -= self.empty_bars
+        time_dict['bars'] -= self.__metadata['empty_bars']
         if time_dict['bars'] < 0:
             return
         self.game.draw(time_dict, canvas)
 
     def handle_event(self, event):
         """Передать мини-игре событие нажатия"""
-        event['time']['bars'] -= self.empty_bars
+        event['time']['bars'] -= self.__metadata['empty_bars']
         if event['time']['bars'] < 0:
             return
         game_states_change = self.game.handle(event)
@@ -70,6 +73,9 @@ class Level:
             'progress': self.progress
         }
 
+    def get_metadata(self):
+        return self.__metadata.copy()
+
     def reset(self):
         self.score = 0
         self.progress = 0.
@@ -77,7 +83,8 @@ class Level:
         self.game.reset()
 
     def get_waypoints(self):
-        return [(wp + self.empty_bars) / (self.game.life_time + self.empty_bars) for wp in self.game.get_waypoints()]
+        return [(wp + self.__metadata['empty_bars']) / (self.game.life_time + self.__metadata['empty_bars']) for wp in
+                self.game.get_waypoints()]
 
 
 class LevelRuntime:
@@ -149,8 +156,8 @@ class LevelRuntime:
     def load(self, level: Level):
         """Загрузить уровень"""
         self.level = level
-        if 'music' in level.metadata:
+        if 'music' in level.get_metadata():
             self.music = True
-            pygame.mixer.music.load(level.metadata['music'])
-            if 'music_offset' in level.metadata:
-                self.active_time = level.metadata['music_offset']
+            pygame.mixer.music.load(level.get_metadata()['music'])
+            if 'music_offset' in level.get_metadata():
+                self.active_time = level.get_metadata()['music_offset']

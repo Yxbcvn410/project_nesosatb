@@ -27,7 +27,7 @@ class Disclaimer(AbstractUI):
         center = tuple(a / 2 for a in self.canvas.get_size())
         pygame_logo = Sprite('Assets/Artwork/UI/Disclaimer/pygame_logo.png')
         pygame_logo.transform(center=center, opacity=0)
-        noblow_logo = Sprite('Assets/Artwork/UI/Disclaimer/noblow_logo.png')
+        noblow_logo = Sprite('Assets/Artwork/UI/Disclaimer/cat_blow.png')
         noblow_logo.transform(center=center, opacity=0)
         times_font = pygame.font.Font('Assets/Fonts/Times New Roman.ttf', 30)
         greet_sprite = Sprite(times_font.render('From creators of lab3.1 and lab3.2', 1, (255,) * 3))

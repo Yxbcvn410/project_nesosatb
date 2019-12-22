@@ -1,17 +1,16 @@
 import math
 from os import path
 from random import choice
-from random import random as rnd
-
-# This game is about pressing one of [w, s, a, d] Every tact has a line of letters
-# for every beat each. Dor the first half of the game we only display for every moment only
-# those letters that relate to this musical moment or earlier one
-# and then with all letters displayed we check if player prints them
 
 import pygame
 
 from Engine.Media import Sprite
 from Engine.MiniGame import AbstractMiniGame
+
+# This game is about pressing one of [w, s, a, d] Every tact has a line of letters
+# for every beat each. Dor the first half of the game we only display for every moment only
+# those letters that relate to this musical moment or earlier one
+# and then with all letters displayed we check if player prints them
 
 img_dir = path.join(path.dirname(__file__), '../Assets/Artwork/img')
 bar_width = 80
@@ -20,8 +19,11 @@ characters = ('w', 's', 'a', 'd')
 
 
 class LetaMiniGame(AbstractMiniGame):
+    def configure(self, config_json):
+        pass  # TODO
+
     def reset(self):
-        pass
+        pass  # TODO
 
     def __init__(self, life_time, letters=None):
         super().__init__(life_time)
@@ -123,6 +125,7 @@ class LetaMiniGame(AbstractMiniGame):
                 and math.fabs(event['time']['delta']) < 0.2:
             bars = (event['time']['bars'] - 1) % self.len_letters
             beats = event['time']['beats']
+
             # new press on already pressed correctly letter also counts
             if event['key']['unicode'] == self.letters[bars][beats]:
                 if self.got_or_not[bars][beats] == -1:
@@ -138,9 +141,6 @@ class LetaMiniGame(AbstractMiniGame):
                 self.got_or_not[bars][beats] = -1
 
         return {'delta_health': delta_health, 'delta_score': delta_score}
-
-    def reset(self):
-        self.__init__(rnd(3, 9))
 
     def write_letters(self, canvas, counter):
 
