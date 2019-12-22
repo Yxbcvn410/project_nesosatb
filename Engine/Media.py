@@ -75,6 +75,14 @@ class Sprite:
         else:
             surface.blit(transformed_instance, left_upper_angle)
 
+    def fill(self, surface):
+        center = [a / 2 for a in surface.get_size()]
+        required_k = max(a[1] / a[0] for a in zip(self.image.get_size(), surface.get_size()))
+        prop = self.get_property()
+        self.transform(center=center, angle=0, scale=required_k, opacity=1)
+        self.draw(surface)
+        self.transform(**prop)
+
 
 class AnimationSprite(Sprite):
     def __init__(self, images: dict):

@@ -24,7 +24,9 @@
             "w",
             ""
           ]
-        ]
+        ],
+        "bg": "Assets/Artwork/img/City Background.png",
+        "cooldown": 2
       }
     },
     {
