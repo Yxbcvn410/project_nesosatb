@@ -1,7 +1,7 @@
 import pygame
 
 from UI.Disclaimer import Disclaimer
-from UI.Menu1 import Menu
+from UI.MvpMenu import MvpMenu
 
 FPS = 30
 
@@ -15,7 +15,7 @@ canvas = pygame.display.set_mode([0, 0], pygame.FULLSCREEN)
 pygame.mouse.set_cursor((8, 8), (0, 0), (0,) * 8, (0,) * 8)
 
 clock = pygame.time.Clock()
-menu = Menu(canvas)
+menu = MvpMenu(canvas)
 
 ui_context = {'menu': menu, 'disclaimer': Disclaimer(canvas)}
 

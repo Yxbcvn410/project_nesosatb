@@ -1,0 +1,19 @@
+{
+  "bpm": 126,
+  "metadata": {
+    "music": "Assets/Sound/Sabrepulse - Termination Shock.wav",
+    "empty_bars": 2,
+    "name": "Test level"
+  },
+  "game": [
+    {
+      "type": "StubMiniGame",
+      "life_time": 1,
+      "repeat": 10
+    },
+    {
+      "type": "VetaMiniGame",
+      "life_time": 32
+    }
+  ]
+}
