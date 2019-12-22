@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a27c938d-f4d3-4d19-ad26-fb5cff579453" name="Default Changelist" comment="Changes:&#10;+ Better LetterMiniGame.py&#10;+ Music in menu&#10;+ Exit confirmation">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/project_nesosatb.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/rSettings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="Yxbcvn410 &lt;a.r.yavorskiy@gmail.com&gt;" />
+      </list>
+    </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="KEEP" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+    <option name="UPDATE_TYPE" value="MERGE" />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="C:\Users\Alexander\PycharmProjects\project_nesosatb\.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1VDbRTHfZgIAKkwSVfIUMZ8JN3T" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Assets/Levels" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Alexander\PycharmProjects\project_nesosatb\Assets\Artwork\UI\Disclaimer" />
+      <recent name="C:\Users\Alexander\PycharmProjects\project_nesosatb\UI" />
+      <recent name="C:\Users\Alexander\PycharmProjects\project_nesosatb\Assets\Artwork\UI\Game" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Alexander\PycharmProjects\project_nesosatb\Assets\Levels" />
+      <recent name="C:\Users\Alexander\PycharmProjects\project_nesosatb\Assets\Fonts" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\Alexander\AppData\Local\Programs\Python\Python38-32\python.exe" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a27c938d-f4d3-4d19-ad26-fb5cff579453" name="Default Changelist" comment="" />
+      <created>1576790604323</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1576790604323</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Merge VetaMinigame.py">
+      <created>1576791201909</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1576791201909</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add .gitignore">
+      <created>1576791361896</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1576791361896</updated>
+    </task>
+    <task id="LOCAL-00003" summary="New event format: dict&#10;- Added level progress bar&#10;- More precise progress information">
+      <created>1576792935256</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1576792935256</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Changes:&#10;- Game UI much better&#10;- LevelRuntime now counts on system time&#10;- Various bugfixes">
+      <created>1576851657492</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1576851657492</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Changes:&#10;- Game UI much better&#10;- LevelRuntime now counts on system time&#10;- Various bugfixes">
+      <created>1576883663567</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1576883663567</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Changes:&#10;- Music&#10;- Volume control&#10;- Unoccupied bars before level">
+      <created>1576914759267</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1576914759267</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Sabrepulse - Termination Shock.wav">
+      <created>1576915535171</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1576915535171</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Small bug fixes">
+      <created>1576919855863</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1576919855863</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Changes:&#10;+ LevelLoader.py added&#10;+ AnimationSprite in Media.py&#10;+ configure() method for AbstractMiniGame&#10;# cat_blow.png rescaled&#10;# Level metadata hidden in Level.py">
+      <created>1576963974328</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1576963974328</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Changes:&#10;+ Working menu and level upload">
+      <created>1577005054491</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1577005054491</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Changes:&#10;+ New sound&#10;+ New LetterMiniGame.py&#10;* Correction in LevelRuntime">
+      <created>1577026646605</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1577026646605</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Changes:&#10;+ Better LetterMiniGame.py&#10;+ Music in menu&#10;+ Exit confirmation">
+      <created>1577035322808</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1577035322808</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Changes:&#10;+ Better LetterMiniGame.py&#10;+ Music in menu&#10;+ Exit confirmation">
+      <created>1577036069471</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1577036069471</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
+    <MESSAGE value="Add .gitignore" />
+    <MESSAGE value="Add .gitignore" />
+    <MESSAGE value="Added level progress bar" />
+    <MESSAGE value="New event format: dict&#10;- Added level progress bar&#10;- More precise progress information" />
+    <MESSAGE value="Changes:&#10;- Disclaimer&#10;- AnimationRuntime&#10;- New artwork&#10;- Mini-game API change: assert beat_size!" />
+    <MESSAGE value="Changes:&#10;- Game UI much better&#10;- LevelRuntime now counts on system time&#10;- Various bugfixes" />
+    <MESSAGE value="Changes:&#10;- Music&#10;- Volume control&#10;- Unoccupied bars before level" />
+    <MESSAGE value="Sabrepulse - Termination Shock.wav" />
+    <MESSAGE value="Small bug fixes" />
+    <MESSAGE value="Changes:&#10;+ LevelLoader.py added&#10;+ AnimationSprite in Media.py&#10;+ configure() method for AbstractMiniGame&#10;# cat_blow.png rescaled&#10;# Level metadata hidden in Level.py" />
+    <MESSAGE value="Changes:&#10;+ Working menu and level upload" />
+    <MESSAGE value="Changes:&#10;+ New sound&#10;+ New LetterMiniGame.py&#10;* Correction in LevelRuntime" />
+    <MESSAGE value="Changes:&#10;+ Better LetterMiniGame.py&#10;+ Music in menu&#10;+ Exit confirmation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes:&#10;+ Better LetterMiniGame.py&#10;+ Music in menu&#10;+ Exit confirmation" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="552" y="178" key="#Notifications" timestamp="1576790719268">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="178" key="#Notifications/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1576790719268" />
+    <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1577036542609">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036542609" />
+    <state x="714" y="322" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1577013619004">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="714" y="322" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1577013619004" />
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser" timestamp="1577033783640">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577033783640" />
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1577001455972" />
+    <state x="614" y="114" key="CommitChangelistDialog2" timestamp="1577037043420">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="614" y="114" key="CommitChangelistDialog2/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577037043420" />
+    <state x="614" y="114" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1577005054019" />
+    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1576925805446">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1576925805446" />
+    <state x="810" y="420" key="GitRewordDialog" timestamp="1576791411663">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="810" y="420" key="GitRewordDialog/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1576791411663" />
+    <state width="949" height="348" key="GridCell.Tab.0.bottom" timestamp="1577036592708">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="949" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036592708" />
+    <state width="1001" height="447" key="GridCell.Tab.0.bottom/0.0.1920.1040/461.1080.1000.504@0.0.1920.1040" timestamp="1577029032645" />
+    <state width="1921" height="983" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1577027249926" />
+    <state width="949" height="348" key="GridCell.Tab.0.center" timestamp="1577036592708">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="949" height="348" key="GridCell.Tab.0.center/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036592708" />
+    <state width="1001" height="447" key="GridCell.Tab.0.center/0.0.1920.1040/461.1080.1000.504@0.0.1920.1040" timestamp="1577029032644" />
+    <state width="1921" height="983" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1577027249926" />
+    <state width="949" height="348" key="GridCell.Tab.0.left" timestamp="1577036592708">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="949" height="348" key="GridCell.Tab.0.left/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036592708" />
+    <state width="1001" height="447" key="GridCell.Tab.0.left/0.0.1920.1040/461.1080.1000.504@0.0.1920.1040" timestamp="1577029032644" />
+    <state width="1921" height="983" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1577027249926" />
+    <state width="949" height="348" key="GridCell.Tab.0.right" timestamp="1577036592708">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="949" height="348" key="GridCell.Tab.0.right/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036592708" />
+    <state width="1001" height="447" key="GridCell.Tab.0.right/0.0.1920.1040/461.1080.1000.504@0.0.1920.1040" timestamp="1577029032645" />
+    <state width="1921" height="983" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1577027249926" />
+    <state width="949" height="348" key="GridCell.Tab.1.bottom" timestamp="1577036592709">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="949" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036592709" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1576924790316" />
+    <state width="949" height="348" key="GridCell.Tab.1.center" timestamp="1577036592709">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="949" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036592709" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1576924790315" />
+    <state width="949" height="348" key="GridCell.Tab.1.left" timestamp="1577036592709">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="949" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036592709" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1576924790315" />
+    <state width="949" height="348" key="GridCell.Tab.1.right" timestamp="1577036592709">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="949" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036592709" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1576924790315" />
+    <state x="184" y="85" key="MergeDialog" timestamp="1576922482420">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="184" y="85" key="MergeDialog/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1576791491359" />
+    <state x="184" y="85" key="MergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1576922482420" />
+    <state x="672" y="235" key="MultipleFileMergeDialog" timestamp="1577036478969">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="672" y="235" key="MultipleFileMergeDialog/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036478969" />
+    <state x="672" y="235" key="MultipleFileMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1576922482432" />
+    <state x="736" y="230" key="RollbackChangesDialog" timestamp="1577033158063">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="736" y="230" key="RollbackChangesDialog/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577033158063" />
+    <state x="461" y="162" key="SettingsEditor" timestamp="1576923157794">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1576791535847" />
+    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1576923157794" />
+    <state x="552" y="241" key="Vcs.Push.Dialog.v2" timestamp="1577036079599">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="241" key="Vcs.Push.Dialog.v2/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036079599" />
+    <state x="552" y="241" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1577005057558" />
+    <state x="640" y="253" key="VcsDiffUtil.ChangesDialog" timestamp="1576925675460">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="640" y="253" key="VcsDiffUtil.ChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1576925675460" />
+    <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1577036988398">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036988398" />
+    <state x="769" y="436" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1577036598847">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="769" y="436" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036598847" />
+    <state x="769" y="436" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1577001357341" />
+    <state x="656" y="125" width="737" height="789" key="find.popup" timestamp="1577013841471">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="656" y="125" width="737" height="789" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1577013841471" />
+    <state x="740" y="232" key="git4idea.branch.GitSmartOperationDialog" timestamp="1577036803432">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="232" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577036803432" />
+    <state x="740" y="232" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1576923449610" />
+    <state x="716" y="311" key="git4idea.merge.GitMergeDialog" timestamp="1577037071808">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="716" y="311" key="git4idea.merge.GitMergeDialog/0.0.1920.1040/460.1080.1000.504@0.0.1920.1040" timestamp="1577037071808" />
+    <state x="716" y="311" key="git4idea.merge.GitMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1576924764298" />
+    <state x="725" y="420" key="git4idea.ui.GitStashDialog" timestamp="1576877897225">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="725" y="420" key="git4idea.ui.GitStashDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1576877897225" />
+    <state x="725" y="367" key="git4idea.ui.GitUnstashDialog" timestamp="1576877941642">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="725" y="367" key="git4idea.ui.GitUnstashDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1576877941642" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1576933404222">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1576933404222" />
+  </component>
+</project>
