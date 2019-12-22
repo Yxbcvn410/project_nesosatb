@@ -1,0 +1,34 @@
+{
+  "bpm": 128,
+  "metadata": {
+    "music": "Assets/Sound/Trip40 - Clash.wav",
+    "empty_bars": 0,
+    "name": "Wrapper test level"
+  },
+  "game": [
+    {
+      "type": "Wrapper",
+      "life_time": 1,
+      "repeat": 8,
+      "config": [
+        {
+          "type": "StubMiniGame",
+          "life_time": 1,
+          "repeat": 1
+        },
+        {
+          "type": "StubMiniGame",
+          "life_time": 1,
+          "repeat": 1,
+          "config": {
+            "sprite": "Assets/Artwork/UI/Disclaimer/cat_blow.png"
+          }
+        }
+      ]
+    },
+    {
+      "type": "VetaMiniGame",
+      "life_time": 32
+    }
+  ]
+}
