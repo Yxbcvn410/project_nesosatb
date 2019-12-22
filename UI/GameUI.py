@@ -183,7 +183,3 @@ class GameUI(AbstractUI):
                 info_text = font.render('K - settings, M - toggle show controls, Esc - quit', 1, WHITE)
                 self.canvas.blit(pause_text, pause_text.get_rect(center=center))
                 self.canvas.blit(info_text, (center[0] - info_text.get_size()[0] / 2, center[1] + 40))
-        elif self.runtime.get_time_dict()['bars'] == 0 and \
-                (self.runtime.get_time_dict()['beats'] + 1) / self.runtime.get_time_dict()['beat_size'] <= 0.5:
-            ready_text = font.render('Get ready', 1, WHITE)
-            self.canvas.blit(ready_text, ready_text.get_rect(center=center))

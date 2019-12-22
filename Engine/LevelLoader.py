@@ -4,13 +4,15 @@ import os
 from Engine.Level import Level
 from Engine.MiniGame import MiniGameWrapper
 from MiniGames.LetaMiniGame import LetaMiniGame
+from MiniGames.LetterMiniGame import LetterMiniGame
 from MiniGames.StubMinigame import StubMinigame
 from MiniGames.VetaMinigame import VetaMiniGame
 
 ACCESSIBLE_CONSTRUCTORS = {
     'StubMiniGame': lambda life_time: StubMinigame(life_time),
     'LetaMiniGame': lambda life_time: LetaMiniGame(life_time),
-    'VetaMiniGame': lambda life_time: VetaMiniGame(life_time)
+    'VetaMiniGame': lambda life_time: VetaMiniGame(life_time),
+    'LetterMiniGame': lambda life_time: LetterMiniGame(life_time)
 }
 
 

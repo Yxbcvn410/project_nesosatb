@@ -22,9 +22,14 @@ class MvpMenu(AbstractUI):
         self.level_pointer = 0
         self.first_in_view = 0
         self.lines_no = (self.canvas.get_size()[1] - MARGIN * 2) // LINE_SZ
+        self.sound_playing = False
 
     def key_press(self, event):
         if event['key'] == pygame.K_KP_ENTER or event['key'] == pygame.K_SPACE:
+            self.sound_playing = False
+            pygame.mixer.music.stop()
+            pygame.mixer.music.pause()
+
             level = self.loader.load_level(self.levels_id[self.level_pointer])
             runtime = LevelRuntime()
             runtime.load(level)
@@ -52,10 +57,13 @@ class MvpMenu(AbstractUI):
                 self.first_in_view -= 1
 
     def update(self):
-        pass
+        if not self.sound_playing:
+            self.sound_playing = True
+            pygame.mixer.music.load('Assets/Music/menu1.wav')
+            pygame.mixer.music.play(-1)
 
     def draw_widgets(self):
-        font = pygame.font.Font("Assets/Fonts/Times New Roman.ttf", FONT_SZ)
+        font = pygame.font.Font("Assets/Fonts/Patapon.ttf", FONT_SZ)
         size = self.canvas.get_size()
         for i in range(self.lines_no):
             if i + self.first_in_view >= len(self.levels):

@@ -2,13 +2,17 @@ import time
 
 import pygame
 
+from Engine.Media import Sprite
+
 
 class Level:
-    def __init__(self, bpm, health_max=100, metadata={}):
+    def __init__(self, bpm, health_max=100, metadata=None):
+        if metadata is None:
+            metadata = {}
         self.bpm = bpm
         self.game = None
-        self.health_max = health_max
-        self.health = health_max
+        self.health_max = metadata.get('health_max', health_max)
+        self.health = self.health_max
         self.score = 0
         self.progress = 0.
         self.__metadata = metadata
@@ -49,7 +53,14 @@ class Level:
     def draw(self, canvas, time_dict: dict):
         time_dict['bars'] -= self.__metadata['empty_bars']
         if time_dict['bars'] < 0:
-            return
+            font = pygame.font.Font('Assets/Fonts/Patapon.ttf', 40)
+            center = [a / 2 for a in canvas.get_size()]
+            ready_text = font.render('Get ready', 1, (255,) * 3)
+            ready_sprite = Sprite(ready_text)
+            ready_sprite.transform(center=center,
+                                   opacity=1 - (time_dict['beats'] + time_dict['delta'] + 0.5) / time_dict[
+                                       'beat_size'] if time_dict['bars'] == -1 else 1)
+            ready_sprite.draw(canvas)
         self.game.draw(time_dict, canvas)
 
     def handle_event(self, event):
@@ -110,7 +121,7 @@ class LevelRuntime:
             'beat_size': self.level.get_beat_size(),
             'delta': beat_delta * self.level.bpm / 60,
             'beat_type':
-                -1 if beat_delta - self.dt < -0.5 < beat_delta
+                -1 if beat_delta * self.level.bpm / 60 < 0.5 < (beat_delta + self.dt) * self.level.bpm / 60
                 else 0 if not self.dt > beat_delta > 0
                 else 1 if beat_no % self.level.get_beat_size()
                 else 2
