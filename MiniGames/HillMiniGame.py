@@ -60,19 +60,25 @@ class Rock:
         self.angle = 0
         self.time = time
 
-    def update_draw(self, canvas):
+    def draw(self, canvas):
         if self.position is None:
             x = 1.1 * canvas.get_width()
             y = - 0.6 * canvas.get_width() * self.hill_alpha / 2 + canvas.get_height() / 2 - 140
             self.sprite.transform(center=(x, y))
             self.position = [x, y]
-
         self.sprite.transform(angle=self.angle)
-        self.position[0] -= 10
-        self.position[1] += 10 * self.hill_alpha
         self.sprite.transform(center=self.position)
-        self.angle += 10
         self.sprite.draw(canvas)
+
+    def update(self):
+        if self.position:
+
+            self.angle += 10
+
+            self.position[0] -= 10
+            self.position[1] += 10 * self.hill_alpha
+
+
 
 
 class HillMinigame(AbstractMiniGame):
@@ -109,6 +115,10 @@ class HillMinigame(AbstractMiniGame):
         if self.raccoon.state == 'death':
             delta_health = - 2
 
+        for rock in self.rocks:
+            if rock.time <= time['bars']:
+                rock.update()
+
         return {'delta_health': delta_health, 'delta_score': 0}
 
     def draw(self, time: dict, canvas):
@@ -126,10 +136,10 @@ class HillMinigame(AbstractMiniGame):
 
         for rock in self.rocks:
             if rock.time <= time['bars']:
-                rock.update_draw(canvas)
+                rock.draw(canvas)
 
     def handle(self, event):
-        if event['key']['unicode'] in ('w', 'a', 's', 'd') and math.fabs(event['time']['delta']) < 0.1:
+        if event['key']['unicode'] in ('w', 'a', 's', 'd') and math.fabs(event['time']['delta']) < 0.5:
             self.last_pressed.append(event['key']['unicode'])
 
         if self.last_pressed[-3:] == ['a', 's', 'd']:
