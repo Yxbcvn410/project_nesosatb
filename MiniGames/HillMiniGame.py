@@ -52,12 +52,13 @@ class Raccoon:
 
 
 class Rock:
-    def __init__(self):
+    def __init__(self, time):
         self.sprite = Sprite(pygame.image.load(choice(
             [img_dir + 'rocks/' + file for file in listdir(img_dir + 'rocks')])))
         self.hill_alpha = 0.26
         self.position = None
         self.angle = 0
+        self.time = time
 
     def update_draw(self, canvas):
         if self.position is None:
@@ -78,7 +79,7 @@ class HillMinigame(AbstractMiniGame):
     def configure(self, config_json):
         self.hill_image = Sprite(pygame.image.load(path.join(img_dir, config_json['hill'])).convert_alpha())
         self.background = Sprite(pygame.image.load(path.join(img_dir, config_json["background"])).convert())
-        self.rocks = [Rock()]
+        self.rocks = [Rock(time) for time in config_json['rock_times']]
 
     def reset(self):
         pass
@@ -89,6 +90,7 @@ class HillMinigame(AbstractMiniGame):
         self.background = None
         self.raccoon = Raccoon()
         self.rocks = None
+        self.last_pressed = []
 
     def update(self, time: dict):
         self.raccoon.counters[self.raccoon.state] += 0.5
@@ -123,9 +125,14 @@ class HillMinigame(AbstractMiniGame):
         self.raccoon.draw(self.raccoon.state, canvas)
 
         for rock in self.rocks:
-            rock.update_draw(canvas)
+            if rock.time <= time['bars']:
+                rock.update_draw(canvas)
 
     def handle(self, event):
-        if event['key']['unicode'] == 'j':
+        if event['key']['unicode'] in ('w', 'a', 's', 'd') and math.fabs(event['time']['delta']) < 0.1:
+            self.last_pressed.append(event['key']['unicode'])
+
+        if self.last_pressed[-3:] == ['a', 's', 'd']:
             self.raccoon.state = 'jump'
+            self.last_pressed = []
         return {'delta_health': 0, 'delta_score': 0}
